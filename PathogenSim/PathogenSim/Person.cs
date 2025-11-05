@@ -2,11 +2,8 @@ namespace PathogenSim;
 
 public class Person
 {
-    private bool _isInfected;
-
-
-    public bool IsInfected()
-    {
-        return _isInfected;
-    }
+    public bool IsInfected { get; private set; }
+    public bool IsHospitalized { get; private set; }
+    
+    
 }
