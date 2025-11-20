@@ -34,10 +34,10 @@ public class SimWorld
             population[random.Next(0, population.Count)].Infect();
     }
     
-    public void Step()
+    public void Step(int timeStep)
     {
         foreach (Person p in population)
-            p.Update(hour);
+            p.Step(this, timeStep);
 
         hour++;
         if (hour >= 24)

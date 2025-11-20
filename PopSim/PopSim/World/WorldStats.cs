@@ -32,7 +32,7 @@ public class WorldStats
         
         foreach (Person p in population)
         {
-            switch (p.state)
+            switch (p.healthState)
             {
                 case HealthState.DEAD:
                     deathCount++;

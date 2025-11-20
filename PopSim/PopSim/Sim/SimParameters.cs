@@ -1,4 +1,5 @@
-﻿using PopSim.Utility;
+﻿using PopSim.States;
+using PopSim.Utility;
 
 namespace PopSim.Sim;
 
@@ -11,7 +12,17 @@ public static class SimParameters
     public static readonly IntRange rangeOfWorkMembers = new IntRange(4, 16);
     
     //Population Behaviour
-    public static readonly List<IntRange> schedules = [];
+    public static readonly List<ScheduleItem> schedule =
+    [
+        new ScheduleItem(SocialState.SLEEPING, new IntRange(23, 6)),
+        new ScheduleItem(SocialState.HOME, new IntRange(7, 7)),
+        new ScheduleItem(SocialState.WORK, new IntRange(8, 15)),
+        new ScheduleItem(SocialState.SOCIAL, new IntRange(16, 17)),
+        new ScheduleItem(SocialState.HOME, new IntRange(18, 22))
+    ]; 
+    
+    //Hospitals
+    public static readonly int maxHospitalCapacity = 150;
     
     //Infection
     public static readonly int numberOfInitialInfections = 10;

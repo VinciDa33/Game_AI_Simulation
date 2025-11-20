@@ -6,142 +6,141 @@ namespace PopSim;
 
 public class Person
 {
-    public HealthState state { get; private set; }= HealthState.HEALTHY;
-    public SocialState SocialState { get; private set; }  = SocialState.HOME;
-    private byte timeSinceStateChange = 0;
+    public HealthState healthState { get; private set; }= HealthState.HEALTHY;
+    public SocialState socialState { get; private set; }  = SocialState.HOME;
+    private int healthStateChangeTimeStep = 0;
     
     public List<Person> familyRealtions { get; private set; } = new List<Person>();
     public List<Person> socialRelations { get; private set; } = new List<Person>();
     public List<Person> workRelations { get; private set; } = new List<Person>();
 
-    public void Update(int hour)
+    public void Step(SimWorld world, int timeStep)
     {
-        if (state == HealthState.DEAD)
+        if (healthState == HealthState.DEAD)
             return;
         
-        UpdateSocialState(hour);
-        UpdateInfectedState();
-        UpdateHealth();
+        UpdateSocialState(world.hour);
+        UpdateInfectedState(timeStep);
+        UpdateHealth(timeStep);
         
     }
 
-    private void UpdateHealth()
+    private void UpdateHealth(int timeStep)
     {
         Random random = new Random();
-        timeSinceStateChange++;
 
-        if (state == HealthState.INFECTED)
+        if (healthState == HealthState.INFECTED)
         {
             if (random.NextDouble() < SimParameters.chanceOfRecoveryFromInfectionPerHour)
             {
-                state = HealthState.RECOVERED;
-                timeSinceStateChange = 0;
+                healthState = HealthState.RECOVERED;
+                healthStateChangeTimeStep = timeStep;
             }
         }
 
-        if (state == HealthState.INFECTED)
+        if (healthState == HealthState.INFECTED)
         {
-            if (timeSinceStateChange >= SimParameters.meanTimeFromInfectionToSymptomatic)
+            if (timeStep >= healthStateChangeTimeStep + SimParameters.meanTimeFromInfectionToSymptomatic)
             {
-                state = HealthState.SYMPTOMATIC;
-                timeSinceStateChange = 0;
+                healthState = HealthState.SYMPTOMATIC;
+                healthStateChangeTimeStep = timeStep;
             }
         }
 
-        if (state == HealthState.SYMPTOMATIC)
+        if (healthState == HealthState.SYMPTOMATIC)
         {
             if (random.NextDouble() < SimParameters.chanceOfRecoveryFromSymptomaticPerHour)
             {
-                state = HealthState.RECOVERED;
-                timeSinceStateChange = 0;
+                healthState = HealthState.RECOVERED;
+                healthStateChangeTimeStep = timeStep;
                 
             }
         }
 
-        if (state == HealthState.SYMPTOMATIC)
+        if (healthState == HealthState.SYMPTOMATIC)
         {
-            if (timeSinceStateChange >= SimParameters.meanTimeFromSymptomaticToDeath)
+            if (timeStep >= healthStateChangeTimeStep + SimParameters.meanTimeFromSymptomaticToDeath)
             {
-                state = HealthState.DEAD;
-                timeSinceStateChange = 0;
+                healthState = HealthState.DEAD;
+                healthStateChangeTimeStep = timeStep;
             }
         }
     }
     
-    private void UpdateInfectedState()
+    private void UpdateInfectedState(int timeStep)
     {
         Random random = new Random();
         
-        if (state == HealthState.RECOVERED && SimParameters.immuneWithAntibodies)
+        if (healthState == HealthState.RECOVERED && SimParameters.immuneWithAntibodies)
             return;
         
-        if (SocialState == SocialState.SLEEPING)
+        if (socialState == SocialState.SLEEPING)
         {
             foreach (Person p in familyRealtions)
             {
-                if ((p.state == HealthState.INFECTED || p.state == HealthState.SYMPTOMATIC) && state != HealthState.INFECTED && state != HealthState.SYMPTOMATIC)
+                if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
                 {
                     if (random.NextDouble() < SimParameters.infectionChancePerHour)
                     {
-                        state = HealthState.INFECTED;
-                        timeSinceStateChange = 0;
+                        healthState = HealthState.INFECTED;
+                        healthStateChangeTimeStep = timeStep;
                         break;
                     }
                 }
             }
         }
 
-        if (SocialState == SocialState.HOME)
+        if (socialState == SocialState.HOME)
         {
             foreach (Person p in familyRealtions)
             {
-                if (p.SocialState != SocialState.HOME)
+                if (p.socialState != SocialState.HOME)
                     continue;
                 
-                if ((p.state == HealthState.INFECTED || p.state == HealthState.SYMPTOMATIC) && state != HealthState.INFECTED && state != HealthState.SYMPTOMATIC)
+                if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
                 {
                     if (random.NextDouble() < SimParameters.infectionChancePerHour)
                     {
-                        state = HealthState.INFECTED;
-                        timeSinceStateChange = 0;
+                        healthState = HealthState.INFECTED;
+                        healthStateChangeTimeStep = timeStep;
                         break;
                     }
                 }
             }
         }
         
-        if (SocialState == SocialState.WORK)
+        if (socialState == SocialState.WORK)
         {
             foreach (Person p in workRelations)
             {
-                if (p.SocialState != SocialState.WORK)
+                if (p.socialState != SocialState.WORK)
                     continue;
                 
-                if ((p.state == HealthState.INFECTED || p.state == HealthState.SYMPTOMATIC) && state != HealthState.INFECTED && state != HealthState.SYMPTOMATIC)
+                if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
                 {
                     if (random.NextDouble() < SimParameters.infectionChancePerHour)
                     {
-                        state = HealthState.INFECTED;
-                        timeSinceStateChange = 0;
+                        healthState = HealthState.INFECTED;
+                        healthStateChangeTimeStep = timeStep;
                         break;
                     }
                 }
             }
         }
         
-        if (SocialState == SocialState.SOCIAL)
+        if (socialState == SocialState.SOCIAL)
         {
             foreach (Person p in socialRelations)
             {
-                if (p.SocialState != SocialState.SOCIAL)
+                if (p.socialState != SocialState.SOCIAL)
                     continue;
                 
-                if ((p.state == HealthState.INFECTED || p.state == HealthState.SYMPTOMATIC) && state != HealthState.INFECTED && state != HealthState.SYMPTOMATIC)
+                if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
                 {
                     if (random.NextDouble() < SimParameters.infectionChancePerHour)
                     {
-                        state = HealthState.INFECTED;
-                        timeSinceStateChange = 0;
+                        healthState = HealthState.INFECTED;
+                        healthStateChangeTimeStep = timeStep;
                         break;
                     }
                 }
@@ -151,30 +150,30 @@ public class Person
 
     private void UpdateSocialState(int hour)
     {
-        if (state == HealthState.DEAD)
+        if (healthState == HealthState.DEAD)
             return;
         
         if (hour == 8) //Wakes up
         {
-            if (state == HealthState.SYMPTOMATIC) //Symptomatic, stays home
-                SocialState = SocialState.HOME;
+            if (healthState == HealthState.SYMPTOMATIC) //Symptomatic, stays home
+                socialState = SocialState.HOME;
             else //Not symptomatic, goes to work
-                SocialState = SocialState.WORK;
+                socialState = SocialState.WORK;
         }
 
         if (hour == 15)
         {
-            if (state == HealthState.SYMPTOMATIC) //Symptomatic, stays home
-                SocialState = SocialState.HOME;
+            if (healthState == HealthState.SYMPTOMATIC) //Symptomatic, stays home
+                socialState = SocialState.HOME;
             else //Not symptomatic, is social
-                SocialState = SocialState.SOCIAL;
+                socialState = SocialState.SOCIAL;
         }
 
         if (hour == 18) //Goes home
-            SocialState = SocialState.HOME;
+            socialState = SocialState.HOME;
 
         if (hour == 23) //Goes to sleep
-            SocialState = SocialState.SLEEPING;
+            socialState = SocialState.SLEEPING;
     }
 
     public void SetRelations(SimWorld world)
@@ -235,7 +234,7 @@ public class Person
 
     public void Infect()
     {
-        state = HealthState.INFECTED;
+        healthState = HealthState.INFECTED;
     }
 
     public void AddFamilyMember(Person p)

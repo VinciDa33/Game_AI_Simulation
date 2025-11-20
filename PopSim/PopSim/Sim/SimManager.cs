@@ -26,7 +26,7 @@ public class SimManager
     
     public void Step()
     {
-        world.Step();
+        world.Step(timeStep);
 
         timeStep++;
         
