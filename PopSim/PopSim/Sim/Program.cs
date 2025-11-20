@@ -1,4 +1,6 @@
-﻿namespace PopSim;
+﻿using PopSim.Sim;
+
+namespace PopSim;
 
 class Program
 {

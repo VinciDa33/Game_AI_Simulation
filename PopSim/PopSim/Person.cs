@@ -1,8 +1,12 @@
-﻿namespace PopSim;
+﻿using PopSim.Sim;
+using PopSim.States;
+using PopSim.World;
+
+namespace PopSim;
 
 public class Person
 {
-    public PersonState state { get; private set; }= PersonState.HEALTHY;
+    public HealthState state { get; private set; }= HealthState.HEALTHY;
     public SocialState SocialState { get; private set; }  = SocialState.HOME;
     private byte timeSinceStateChange = 0;
     
@@ -12,7 +16,7 @@ public class Person
 
     public void Update(int hour)
     {
-        if (state == PersonState.DEAD)
+        if (state == HealthState.DEAD)
             return;
         
         UpdateSocialState(hour);
@@ -26,39 +30,39 @@ public class Person
         Random random = new Random();
         timeSinceStateChange++;
 
-        if (state == PersonState.INFECTED)
+        if (state == HealthState.INFECTED)
         {
             if (random.NextDouble() < SimParameters.chanceOfRecoveryFromInfectionPerHour)
             {
-                state = PersonState.RECOVERED;
+                state = HealthState.RECOVERED;
                 timeSinceStateChange = 0;
             }
         }
 
-        if (state == PersonState.INFECTED)
+        if (state == HealthState.INFECTED)
         {
             if (timeSinceStateChange >= SimParameters.meanTimeFromInfectionToSymptomatic)
             {
-                state = PersonState.SYMPTOMATIC;
+                state = HealthState.SYMPTOMATIC;
                 timeSinceStateChange = 0;
             }
         }
 
-        if (state == PersonState.SYMPTOMATIC)
+        if (state == HealthState.SYMPTOMATIC)
         {
             if (random.NextDouble() < SimParameters.chanceOfRecoveryFromSymptomaticPerHour)
             {
-                state = PersonState.RECOVERED;
+                state = HealthState.RECOVERED;
                 timeSinceStateChange = 0;
                 
             }
         }
 
-        if (state == PersonState.SYMPTOMATIC)
+        if (state == HealthState.SYMPTOMATIC)
         {
             if (timeSinceStateChange >= SimParameters.meanTimeFromSymptomaticToDeath)
             {
-                state = PersonState.DEAD;
+                state = HealthState.DEAD;
                 timeSinceStateChange = 0;
             }
         }
@@ -68,18 +72,18 @@ public class Person
     {
         Random random = new Random();
         
-        if (state == PersonState.RECOVERED && SimParameters.immuneWithAntibodies)
+        if (state == HealthState.RECOVERED && SimParameters.immuneWithAntibodies)
             return;
         
         if (SocialState == SocialState.SLEEPING)
         {
             foreach (Person p in familyRealtions)
             {
-                if ((p.state == PersonState.INFECTED || p.state == PersonState.SYMPTOMATIC) && state != PersonState.INFECTED && state != PersonState.SYMPTOMATIC)
+                if ((p.state == HealthState.INFECTED || p.state == HealthState.SYMPTOMATIC) && state != HealthState.INFECTED && state != HealthState.SYMPTOMATIC)
                 {
                     if (random.NextDouble() < SimParameters.infectionChancePerHour)
                     {
-                        state = PersonState.INFECTED;
+                        state = HealthState.INFECTED;
                         timeSinceStateChange = 0;
                         break;
                     }
@@ -94,11 +98,11 @@ public class Person
                 if (p.SocialState != SocialState.HOME)
                     continue;
                 
-                if ((p.state == PersonState.INFECTED || p.state == PersonState.SYMPTOMATIC) && state != PersonState.INFECTED && state != PersonState.SYMPTOMATIC)
+                if ((p.state == HealthState.INFECTED || p.state == HealthState.SYMPTOMATIC) && state != HealthState.INFECTED && state != HealthState.SYMPTOMATIC)
                 {
                     if (random.NextDouble() < SimParameters.infectionChancePerHour)
                     {
-                        state = PersonState.INFECTED;
+                        state = HealthState.INFECTED;
                         timeSinceStateChange = 0;
                         break;
                     }
@@ -113,11 +117,11 @@ public class Person
                 if (p.SocialState != SocialState.WORK)
                     continue;
                 
-                if ((p.state == PersonState.INFECTED || p.state == PersonState.SYMPTOMATIC) && state != PersonState.INFECTED && state != PersonState.SYMPTOMATIC)
+                if ((p.state == HealthState.INFECTED || p.state == HealthState.SYMPTOMATIC) && state != HealthState.INFECTED && state != HealthState.SYMPTOMATIC)
                 {
                     if (random.NextDouble() < SimParameters.infectionChancePerHour)
                     {
-                        state = PersonState.INFECTED;
+                        state = HealthState.INFECTED;
                         timeSinceStateChange = 0;
                         break;
                     }
@@ -132,11 +136,11 @@ public class Person
                 if (p.SocialState != SocialState.SOCIAL)
                     continue;
                 
-                if ((p.state == PersonState.INFECTED || p.state == PersonState.SYMPTOMATIC) && state != PersonState.INFECTED && state != PersonState.SYMPTOMATIC)
+                if ((p.state == HealthState.INFECTED || p.state == HealthState.SYMPTOMATIC) && state != HealthState.INFECTED && state != HealthState.SYMPTOMATIC)
                 {
                     if (random.NextDouble() < SimParameters.infectionChancePerHour)
                     {
-                        state = PersonState.INFECTED;
+                        state = HealthState.INFECTED;
                         timeSinceStateChange = 0;
                         break;
                     }
@@ -147,12 +151,12 @@ public class Person
 
     private void UpdateSocialState(int hour)
     {
-        if (state == PersonState.DEAD)
+        if (state == HealthState.DEAD)
             return;
         
         if (hour == 8) //Wakes up
         {
-            if (state == PersonState.SYMPTOMATIC) //Symptomatic, stays home
+            if (state == HealthState.SYMPTOMATIC) //Symptomatic, stays home
                 SocialState = SocialState.HOME;
             else //Not symptomatic, goes to work
                 SocialState = SocialState.WORK;
@@ -160,7 +164,7 @@ public class Person
 
         if (hour == 15)
         {
-            if (state == PersonState.SYMPTOMATIC) //Symptomatic, stays home
+            if (state == HealthState.SYMPTOMATIC) //Symptomatic, stays home
                 SocialState = SocialState.HOME;
             else //Not symptomatic, is social
                 SocialState = SocialState.SOCIAL;
@@ -173,7 +177,7 @@ public class Person
             SocialState = SocialState.SLEEPING;
     }
 
-    public void SetRelations()
+    public void SetRelations(SimWorld world)
     {
         Random random = new Random();
         
@@ -186,7 +190,7 @@ public class Person
             if (familyRealtions.Count != 0)
                 break;
             
-            Person p = World.Instance.population[random.Next(World.Instance.population.Count)];
+            Person p = world.population[random.Next(world.population.Count)];
             if (p == this || familyRealtions.Contains(p))
                 continue;
 
@@ -201,7 +205,7 @@ public class Person
         
         while (socialRelations.Count < socialRelationsCount)
         {
-            Person p = World.Instance.population[random.Next(World.Instance.population.Count)];
+            Person p = world.population[random.Next(world.population.Count)];
             if (p == this || socialRelations.Contains(p))
                 continue;
             
@@ -214,7 +218,7 @@ public class Person
             if (workRelations.Count != 0)
                 break;
             
-            Person p = World.Instance.population[random.Next(World.Instance.population.Count)];
+            Person p = world.population[random.Next(world.population.Count)];
             if (p == this || workRelations.Contains(p))
                 continue;
             
@@ -231,7 +235,7 @@ public class Person
 
     public void Infect()
     {
-        state = PersonState.INFECTED;
+        state = HealthState.INFECTED;
     }
 
     public void AddFamilyMember(Person p)

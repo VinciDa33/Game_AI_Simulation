@@ -1,4 +1,4 @@
-﻿namespace PopSim;
+﻿namespace PopSim.States;
 
 public enum SocialState
 {

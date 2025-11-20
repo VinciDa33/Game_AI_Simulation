@@ -1,4 +1,4 @@
-﻿namespace PopSim;
+﻿namespace PopSim.Utility;
 
 public class FloatRange
 {

@@ -1,4 +1,6 @@
-﻿namespace PopSim;
+﻿using PopSim.Utility;
+
+namespace PopSim.Sim;
 
 public static class SimParameters
 {
@@ -7,6 +9,9 @@ public static class SimParameters
     public static readonly IntRange rangeOfFamilyMembers = new IntRange(1, 5);
     public static readonly IntRange rangeOfSocialMembers = new IntRange(2, 8);
     public static readonly IntRange rangeOfWorkMembers = new IntRange(4, 16);
+    
+    //Population Behaviour
+    public static readonly List<IntRange> schedules = [];
     
     //Infection
     public static readonly int numberOfInitialInfections = 10;

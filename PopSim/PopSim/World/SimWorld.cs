@@ -1,33 +1,32 @@
-﻿namespace PopSim;
+﻿using PopSim.Sim;
 
-public class World
+namespace PopSim.World;
+
+public class SimWorld
 {
-    private static World? instance;
-    public static World Instance
-    {
-        get
-        {
-            if (instance == null)
-                instance = new World();
-            return instance;
-        }
-    }
-    private World()
-    {
-    }
+    public float happiness { get; private set; }
+    
+    public int day { get; private set; } = 0;
+    public int hour { get; private set; } = 0;
+    public bool isWeekend { get; private set; } = false;
 
+    public WorldStats worldStats;
     public List<Person> population { get; private set; } = new List<Person>();
+    
+    public SimWorld()
+    {
+        worldStats = new WorldStats(this);
+    }
 
     public void InitWorld()
     {
         Console.WriteLine("Creating population...");
         for (int i = 0; i < SimParameters.populationSize; i++)
             population.Add(new Person());
-        SimStats.healthyCount = population.Count;
         
         Console.WriteLine("Setting relations...");
         foreach (Person p in population)
-            p.SetRelations();
+            p.SetRelations(this);
         
         Console.WriteLine("Infecting patient Zero...");
         Random random = new Random();
@@ -35,11 +34,21 @@ public class World
             population[random.Next(0, population.Count)].Infect();
     }
     
-    public void Update(int hour)
+    public void Step()
     {
         foreach (Person p in population)
-        {
             p.Update(hour);
+
+        hour++;
+        if (hour >= 24)
+        {
+            hour = 0;
+            day++;
         }
+
+        if (day % 7 == 0 || day % 7 == 6)
+            isWeekend = true;
+        else
+            isWeekend = false;
     }
 }
