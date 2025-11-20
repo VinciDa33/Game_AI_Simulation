@@ -31,7 +31,7 @@ public class Person
 
         if (healthState == HealthState.INFECTED)
         {
-            if (random.NextDouble() < SimParameters.chanceOfRecoveryFromInfectionPerHour)
+            if (random.NextDouble() < SimParameters.Instance.chanceOfRecoveryFromInfectionPerHour)
             {
                 healthState = HealthState.RECOVERED;
                 healthStateChangeTimeStep = timeStep;
@@ -40,7 +40,7 @@ public class Person
 
         if (healthState == HealthState.INFECTED)
         {
-            if (timeStep >= healthStateChangeTimeStep + SimParameters.meanTimeFromInfectionToSymptomatic)
+            if (timeStep >= healthStateChangeTimeStep + SimParameters.Instance.meanTimeFromInfectionToSymptomatic)
             {
                 healthState = HealthState.SYMPTOMATIC;
                 healthStateChangeTimeStep = timeStep;
@@ -49,7 +49,7 @@ public class Person
 
         if (healthState == HealthState.SYMPTOMATIC)
         {
-            if (random.NextDouble() < SimParameters.chanceOfRecoveryFromSymptomaticPerHour)
+            if (random.NextDouble() < SimParameters.Instance.chanceOfRecoveryFromSymptomaticPerHour)
             {
                 healthState = HealthState.RECOVERED;
                 healthStateChangeTimeStep = timeStep;
@@ -59,7 +59,7 @@ public class Person
 
         if (healthState == HealthState.SYMPTOMATIC)
         {
-            if (timeStep >= healthStateChangeTimeStep + SimParameters.meanTimeFromSymptomaticToDeath)
+            if (timeStep >= healthStateChangeTimeStep + SimParameters.Instance.meanTimeFromSymptomaticToDeath)
             {
                 healthState = HealthState.DEAD;
                 healthStateChangeTimeStep = timeStep;
@@ -71,7 +71,7 @@ public class Person
     {
         Random random = new Random();
         
-        if (healthState == HealthState.RECOVERED && SimParameters.immuneWithAntibodies)
+        if (healthState == HealthState.RECOVERED && SimParameters.Instance.immuneWithAntibodies)
             return;
         
         if (socialState == SocialState.SLEEPING)
@@ -80,7 +80,7 @@ public class Person
             {
                 if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
                 {
-                    if (random.NextDouble() < SimParameters.infectionChancePerHour)
+                    if (random.NextDouble() < SimParameters.Instance.infectionChancePerHour)
                     {
                         healthState = HealthState.INFECTED;
                         healthStateChangeTimeStep = timeStep;
@@ -99,7 +99,7 @@ public class Person
                 
                 if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
                 {
-                    if (random.NextDouble() < SimParameters.infectionChancePerHour)
+                    if (random.NextDouble() < SimParameters.Instance.infectionChancePerHour)
                     {
                         healthState = HealthState.INFECTED;
                         healthStateChangeTimeStep = timeStep;
@@ -118,7 +118,7 @@ public class Person
                 
                 if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
                 {
-                    if (random.NextDouble() < SimParameters.infectionChancePerHour)
+                    if (random.NextDouble() < SimParameters.Instance.infectionChancePerHour)
                     {
                         healthState = HealthState.INFECTED;
                         healthStateChangeTimeStep = timeStep;
@@ -137,7 +137,7 @@ public class Person
                 
                 if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
                 {
-                    if (random.NextDouble() < SimParameters.infectionChancePerHour)
+                    if (random.NextDouble() < SimParameters.Instance.infectionChancePerHour)
                     {
                         healthState = HealthState.INFECTED;
                         healthStateChangeTimeStep = timeStep;
@@ -180,9 +180,9 @@ public class Person
     {
         Random random = new Random();
         
-        byte familyRelationsCount = (byte) SimParameters.rangeOfFamilyMembers.GetRandomInRange();
-        byte socialRelationsCount = (byte) SimParameters.rangeOfSocialMembers.GetRandomInRange();
-        byte workRelationsCount = (byte) SimParameters.rangeOfWorkMembers.GetRandomInRange();
+        byte familyRelationsCount = (byte) SimParameters.Instance.rangeOfFamilyMembers.GetRandomInRange();
+        byte socialRelationsCount = (byte) SimParameters.Instance.rangeOfSocialMembers.GetRandomInRange();
+        byte workRelationsCount = (byte) SimParameters.Instance.rangeOfWorkMembers.GetRandomInRange();
 
         while (familyRealtions.Count < familyRelationsCount)
         {
