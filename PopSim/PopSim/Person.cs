@@ -1,5 +1,6 @@
 ﻿using PopSim.Sim;
 using PopSim.States;
+using PopSim.Utility;
 using PopSim.World;
 
 namespace PopSim;
@@ -16,10 +17,11 @@ public class Person
 
     public void Step(SimWorld world, int timeStep)
     {
+        //We do not need to do anything for dead people
         if (healthState == HealthState.DEAD)
             return;
         
-        UpdateSocialState(world.hour);
+        UpdateSocialState(world.hour, world.isWeekend);
         UpdateInfectedState(timeStep);
         UpdateHealth(timeStep);
         
@@ -27,38 +29,31 @@ public class Person
 
     private void UpdateHealth(int timeStep)
     {
-        Random random = new Random();
-
         if (healthState == HealthState.INFECTED)
         {
-            if (random.NextDouble() < SimParameters.Instance.chanceOfRecoveryFromInfectionPerHour)
+            if (RandomManager.Instance.GetNextDouble() < SimParameters.Instance.chanceOfRecoveryFromInfectionPerHour)
             {
                 healthState = HealthState.RECOVERED;
                 healthStateChangeTimeStep = timeStep;
+                return;
             }
-        }
-
-        if (healthState == HealthState.INFECTED)
-        {
+            
             if (timeStep >= healthStateChangeTimeStep + SimParameters.Instance.meanTimeFromInfectionToSymptomatic)
             {
                 healthState = HealthState.SYMPTOMATIC;
                 healthStateChangeTimeStep = timeStep;
             }
         }
-
-        if (healthState == HealthState.SYMPTOMATIC)
+        
+        else if (healthState == HealthState.SYMPTOMATIC)
         {
-            if (random.NextDouble() < SimParameters.Instance.chanceOfRecoveryFromSymptomaticPerHour)
+            if (RandomManager.Instance.GetNextDouble() < SimParameters.Instance.chanceOfRecoveryFromSymptomaticPerHour)
             {
                 healthState = HealthState.RECOVERED;
                 healthStateChangeTimeStep = timeStep;
-                
+                return;
             }
-        }
-
-        if (healthState == HealthState.SYMPTOMATIC)
-        {
+            
             if (timeStep >= healthStateChangeTimeStep + SimParameters.Instance.meanTimeFromSymptomaticToDeath)
             {
                 healthState = HealthState.DEAD;
@@ -69,116 +64,87 @@ public class Person
     
     private void UpdateInfectedState(int timeStep)
     {
-        Random random = new Random();
-        
-        if (healthState == HealthState.RECOVERED && SimParameters.Instance.immuneWithAntibodies)
+        //If a person is already infected, we skip em
+        if (StateHelper.IsInfectious(healthState))
             return;
         
-        if (socialState == SocialState.SLEEPING)
-        {
-            foreach (Person p in familyRealtions)
-            {
-                if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
-                {
-                    if (random.NextDouble() < SimParameters.Instance.infectionChancePerHour)
-                    {
-                        healthState = HealthState.INFECTED;
-                        healthStateChangeTimeStep = timeStep;
-                        break;
-                    }
-                }
-            }
-        }
+        //If a person has recovered and antibodies cause immunity, we skip em
+        if (healthState == HealthState.RECOVERED && SimParameters.Instance.immuneWithAntibodies)
+            return;
 
-        if (socialState == SocialState.HOME)
+        //If a person is at home or sleeping, they can be infected by their family
+        if (socialState == SocialState.SLEEPING || socialState == SocialState.HOME)
         {
             foreach (Person p in familyRealtions)
             {
-                if (p.socialState != SocialState.HOME)
-                    continue;
-                
-                if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
-                {
-                    if (random.NextDouble() < SimParameters.Instance.infectionChancePerHour)
-                    {
-                        healthState = HealthState.INFECTED;
-                        healthStateChangeTimeStep = timeStep;
-                        break;
-                    }
-                }
+                if (TryInfectByPerson(p, timeStep))
+                    return; //The person was infected, and we can stop early
             }
         }
         
-        if (socialState == SocialState.WORK)
+        //If a person is at work, they can be infected by their work relations
+        else if (socialState == SocialState.WORK)
         {
             foreach (Person p in workRelations)
             {
-                if (p.socialState != SocialState.WORK)
-                    continue;
-                
-                if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
-                {
-                    if (random.NextDouble() < SimParameters.Instance.infectionChancePerHour)
-                    {
-                        healthState = HealthState.INFECTED;
-                        healthStateChangeTimeStep = timeStep;
-                        break;
-                    }
-                }
+                if (TryInfectByPerson(p, timeStep))
+                    return; //The person was infected, and we can stop early
             }
         }
-        
-        if (socialState == SocialState.SOCIAL)
+
+        //If a person is socialising, they can be infected by their social group
+        else if (socialState == SocialState.SOCIAL)
         {
             foreach (Person p in socialRelations)
             {
-                if (p.socialState != SocialState.SOCIAL)
-                    continue;
-                
-                if ((p.healthState == HealthState.INFECTED || p.healthState == HealthState.SYMPTOMATIC) && healthState != HealthState.INFECTED && healthState != HealthState.SYMPTOMATIC)
-                {
-                    if (random.NextDouble() < SimParameters.Instance.infectionChancePerHour)
-                    {
-                        healthState = HealthState.INFECTED;
-                        healthStateChangeTimeStep = timeStep;
-                        break;
-                    }
-                }
+                if (TryInfectByPerson(p, timeStep))
+                    return; //The person was infected, and we can stop early
             }
         }
     }
 
-    private void UpdateSocialState(int hour)
+    private bool TryInfectByPerson(Person infector, int timeStep)
     {
-        if (healthState == HealthState.DEAD)
+        //Nothing happens if the infector person is not infectious
+        if (!StateHelper.IsInfectious(infector.healthState))
+            return false;
+
+        //Check if the person becomes infected
+        if (RandomManager.Instance.GetNextDouble() < SimParameters.Instance.infectionChancePerHour)
+        {
+            //The person was infected
+            healthState = HealthState.INFECTED;
+            healthStateChangeTimeStep = timeStep;
+            return true;
+        }
+
+        //The person was not infected
+        return false;
+    }
+
+    private void UpdateSocialState(int hour, bool isWeekend)
+    {
+        //A hospitalized person will stay hospitalized until recovery or death!
+        if (socialState == SocialState.HOSPITALIZED)
             return;
         
-        if (hour == 8) //Wakes up
+        
+        //If a person is symptomatic, they will always sleep or stay home 
+        if (healthState == HealthState.SYMPTOMATIC)
         {
-            if (healthState == HealthState.SYMPTOMATIC) //Symptomatic, stays home
-                socialState = SocialState.HOME;
-            else //Not symptomatic, goes to work
-                socialState = SocialState.WORK;
+            socialState = SimParameters.Instance.baseSchedule[hour] == SocialState.SLEEPING ? SocialState.SLEEPING : SocialState.HOME;
+            return;
         }
-
-        if (hour == 15)
-        {
-            if (healthState == HealthState.SYMPTOMATIC) //Symptomatic, stays home
-                socialState = SocialState.HOME;
-            else //Not symptomatic, is social
-                socialState = SocialState.SOCIAL;
-        }
-
-        if (hour == 18) //Goes home
-            socialState = SocialState.HOME;
-
-        if (hour == 23) //Goes to sleep
-            socialState = SocialState.SLEEPING;
+        
+        
+        //Otherwise, while healthy and infected they will follow the base schedule
+        socialState = isWeekend ? SimParameters.Instance.baseWeekendSchedule[hour] : SimParameters.Instance.baseSchedule[hour];
     }
 
     public void SetRelations(SimWorld world)
-    {
-        Random random = new Random();
+    { 
+        RandomManager random = RandomManager.Instance;
+        
         
         byte familyRelationsCount = (byte) SimParameters.Instance.rangeOfFamilyMembers.GetRandomInRange();
         byte socialRelationsCount = (byte) SimParameters.Instance.rangeOfSocialMembers.GetRandomInRange();
@@ -186,10 +152,12 @@ public class Person
 
         while (familyRealtions.Count < familyRelationsCount)
         {
+            //If this person has already gotten family relations, skip
             if (familyRealtions.Count != 0)
                 break;
             
-            Person p = world.population[random.Next(world.population.Count)];
+            //Pick a random person, and discard if it is this person, or already in family relations
+            Person p = world.population[random.GetNextInt(world.population.Count)];
             if (p == this || familyRealtions.Contains(p))
                 continue;
 
@@ -204,7 +172,7 @@ public class Person
         
         while (socialRelations.Count < socialRelationsCount)
         {
-            Person p = world.population[random.Next(world.population.Count)];
+            Person p = world.population[random.GetNextInt(world.population.Count)];
             if (p == this || socialRelations.Contains(p))
                 continue;
             
@@ -217,7 +185,7 @@ public class Person
             if (workRelations.Count != 0)
                 break;
             
-            Person p = world.population[random.Next(world.population.Count)];
+            Person p = world.population[random.GetNextInt(world.population.Count)];
             if (p == this || workRelations.Contains(p))
                 continue;
             

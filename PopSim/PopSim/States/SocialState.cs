@@ -6,4 +6,5 @@ public enum SocialState
     WORK,
     SOCIAL,
     SLEEPING,
+    HOSPITALIZED,
 }

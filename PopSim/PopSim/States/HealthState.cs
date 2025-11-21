@@ -6,6 +6,5 @@ public enum HealthState
     INFECTED,
     SYMPTOMATIC,
     DEAD,
-    RECOVERED,
-    HOSPITALIZED
+    RECOVERED
 }

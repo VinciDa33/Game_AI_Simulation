@@ -30,14 +30,60 @@ public class SimParameters
     public IntRange rangeOfWorkMembers = new IntRange(4, 16);
     
     //Population Behaviour
-    public  List<ScheduleItem> schedule =
-    [
-        new ScheduleItem(SocialState.SLEEPING, new IntRange(23, 6)),
-        new ScheduleItem(SocialState.HOME, new IntRange(7, 7)),
-        new ScheduleItem(SocialState.WORK, new IntRange(8, 15)),
-        new ScheduleItem(SocialState.SOCIAL, new IntRange(16, 17)),
-        new ScheduleItem(SocialState.HOME, new IntRange(18, 22))
-    ]; 
+    public SocialState[] baseSchedule = [
+        SocialState.SLEEPING, //0.00 - 1.00
+        SocialState.SLEEPING, //1.00 - 2.00
+        SocialState.SLEEPING, //2.00 - 3.00
+        SocialState.SLEEPING, //3.00 - 4.00
+        SocialState.SLEEPING, //4.00 - 5.00
+        SocialState.SLEEPING, //5.00 - 6.00
+        SocialState.SLEEPING, //6.00 - 7.00
+        SocialState.HOME, //7.00 - 8.00
+        SocialState.WORK, //8.00 - 9.00
+        SocialState.WORK, //9.00 - 10.00
+        SocialState.WORK, //10.00 - 11.00
+        SocialState.WORK, //11.00 - 12.00
+        SocialState.WORK, //12.00 - 13.00
+        SocialState.WORK, //13.00 - 14.00
+        SocialState.WORK, //14.00 - 15.00
+        SocialState.SOCIAL, //15.00 - 16.00
+        SocialState.SOCIAL, //16.00 - 17.00
+        SocialState.SOCIAL, //17.00 - 18.00
+        SocialState.HOME, //18.00 - 19.00
+        SocialState.HOME, //19.00 - 20.00
+        SocialState.HOME, //20.00 - 21.00
+        SocialState.HOME, //21.00 - 22.00
+        SocialState.HOME, //22.00 - 23.00
+        SocialState.SLEEPING, //23.00 - 24.00
+    ];
+    
+    //Population Weekend Behaviour
+    public SocialState[] baseWeekendSchedule = [
+        SocialState.SLEEPING, //0.00 - 1.00
+        SocialState.SLEEPING, //1.00 - 2.00
+        SocialState.SLEEPING, //2.00 - 3.00
+        SocialState.SLEEPING, //3.00 - 4.00
+        SocialState.SLEEPING, //4.00 - 5.00
+        SocialState.SLEEPING, //5.00 - 6.00
+        SocialState.SLEEPING, //6.00 - 7.00
+        SocialState.SLEEPING, //7.00 - 8.00
+        SocialState.SLEEPING, //8.00 - 9.00
+        SocialState.SOCIAL, //9.00 - 10.00
+        SocialState.SOCIAL, //10.00 - 11.00
+        SocialState.SOCIAL, //11.00 - 12.00
+        SocialState.SOCIAL, //12.00 - 13.00
+        SocialState.SOCIAL, //13.00 - 14.00
+        SocialState.SOCIAL, //14.00 - 15.00
+        SocialState.SOCIAL, //15.00 - 16.00
+        SocialState.SOCIAL, //16.00 - 17.00
+        SocialState.SOCIAL, //17.00 - 18.00
+        SocialState.SOCIAL, //18.00 - 19.00
+        SocialState.HOME, //19.00 - 20.00
+        SocialState.HOME, //20.00 - 21.00
+        SocialState.HOME, //21.00 - 22.00
+        SocialState.HOME, //22.00 - 23.00
+        SocialState.SLEEPING, //23.00 - 24.00
+    ];
     
     //Hospitals
     public  int maxHospitalCapacity = 150;
