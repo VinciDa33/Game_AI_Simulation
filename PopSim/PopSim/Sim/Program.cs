@@ -1,4 +1,5 @@
-﻿using PopSim.Sim;
+﻿using PopSim.Genetic_Algorithm;
+using PopSim.Sim;
 
 namespace PopSim;
 
@@ -6,7 +7,8 @@ class Program
 {
     static void Main(string[] args)
     {
-        SimManager manager = new SimManager();
+        AlgorithmManager manager = new AlgorithmManager();
+        //SimManager manager = new SimManager();
         manager.Start();
     }
 }

@@ -6,56 +6,57 @@ namespace PopSim.Genetic_Algorithm;
 
 public class Algorithm
 {
-    private List<bool> genome = new List<bool>();
+    public List<bool> genome = new List<bool>();
     private SimWorld world;
     public int timeStep = 0;
     
     //Fitness values
-    public List<int> infectionValues;
-    public List<int> deathValues;
-    public List<int> happinessValues;
+    public List<int> infectionValues = new List<int>();
+    public List<int> deathValues = new List<int>();
+    public List<int> happinessValues = new List<int>();
 
+    //Averages
+    private int infectionAverage {get; set;}
+    private int deathAverage {get; set;}
+    private int happinessAverage {get; set;}
+    
+    
     public Algorithm(List<bool> genome)
     {
         this.genome = genome;
         world = new SimWorld();
     }
     
-    public void Start(List<bool> G)
+    public void Start()
     {
         world.InitWorld();
-        genome = G;
         
         while (true)
         {
             Step();
+            if (timeStep >= 100)
+            {
+                //infectionAverage = infectionValues.Sum()/infectionValues.Count;
+                deathAverage = deathValues.Sum()/deathValues.Count;
+                happinessAverage = happinessValues.Sum()/happinessValues.Count;
+                break;
+            }
         }
     }
     
     public void Step()
     {
         world.Step(timeStep);
-        int[] temp = fitness();
-        infectionValues.Add(temp[3]);
-        deathValues.Add(temp[2]);
-        happinessValues.Add(temp[1]);
+        fitness();
         timeStep++;
     }
     
 
-    public int[] fitness()
+    public void fitness()
     {
         if (genome.Count != SimParameters.Instance.policiesList.Count)
         {
-            Console.WriteLine("Policies count mismatch");
-            return [0,0,0];
-        }
-        
-        //Alternate (world.worldStats.infectedCount == 0 && world.worldStats.symptomaticCount == 0) 
-        world.worldStats.UpdateStats();
-        if (timeStep == 8766)
-        {
-            return [world.worldStats.happiness, world.worldStats.deathCount, world.worldStats.infectedCount];
+            throw new Exception("Policies count mismatch");
         }
 
         for (int i = 0; i < SimParameters.Instance.policiesList.Count; i++)
@@ -63,8 +64,13 @@ public class Algorithm
             SimParameters.Instance.policiesList[i] = genome[i];
         }
         
-        return [world.worldStats.happiness, world.worldStats.deathCount, world.worldStats.infectedCount];
+        //infectionValues.Add(world.worldStats.infectedCount);
+        deathValues.Add(world.worldStats.deathCount);
+        happinessValues.Add(world.worldStats.happiness);
     }
-    
-    
+
+    public int value()
+    {
+        return happinessAverage - deathAverage;
+    }
 }
