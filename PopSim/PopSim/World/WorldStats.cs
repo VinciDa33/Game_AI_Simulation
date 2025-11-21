@@ -11,6 +11,7 @@ public class WorldStats
     public int healthyCount { get; private set; } = 0;
     public int recovered { get; private set; } = 0;
     public int hospitalized { get; private set; } = 0;
+    public int happiness { get; private set; } = 0;
 
     public WorldStats(SimWorld world)
     {
