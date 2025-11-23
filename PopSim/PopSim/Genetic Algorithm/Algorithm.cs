@@ -9,6 +9,7 @@ public class Algorithm
     public List<bool> genome = new List<bool>();
     private SimWorld world;
     public int timeStep = 0;
+    private int simDuration = 8766;
     
     //Fitness values
     public List<int> infectionValues = new List<int>();
@@ -34,7 +35,7 @@ public class Algorithm
         while (true)
         {
             Step();
-            if (timeStep >= 100)
+            if (timeStep >= simDuration)
             {
                 //infectionAverage = infectionValues.Sum()/infectionValues.Count;
                 deathAverage = deathValues.Sum()/deathValues.Count;

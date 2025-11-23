@@ -24,7 +24,7 @@ public class SimParameters
     
     
     //Population
-    public int populationSize = 5500;
+    public int populationSize = 14000;
     public IntRange rangeOfFamilyMembers = new IntRange(1, 5);
     public IntRange rangeOfSocialMembers = new IntRange(2, 8);
     public IntRange rangeOfWorkMembers = new IntRange(4, 16);
