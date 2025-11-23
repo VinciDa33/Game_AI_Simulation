@@ -85,6 +85,34 @@ public class SimParameters
         SocialState.SLEEPING, //23.00 - 24.00
     ];
     
+    //Population remote work Behaviour
+    public SocialState[] remoteSchedule = [
+        SocialState.SLEEPING, //0.00 - 1.00
+        SocialState.SLEEPING, //1.00 - 2.00
+        SocialState.SLEEPING, //2.00 - 3.00
+        SocialState.SLEEPING, //3.00 - 4.00
+        SocialState.SLEEPING, //4.00 - 5.00
+        SocialState.SLEEPING, //5.00 - 6.00
+        SocialState.SLEEPING, //6.00 - 7.00
+        SocialState.HOME, //7.00 - 8.00
+        SocialState.HOME, //8.00 - 9.00
+        SocialState.HOME, //9.00 - 10.00
+        SocialState.HOME, //10.00 - 11.00
+        SocialState.HOME, //11.00 - 12.00
+        SocialState.HOME, //12.00 - 13.00
+        SocialState.HOME, //13.00 - 14.00
+        SocialState.HOME, //14.00 - 15.00
+        SocialState.SOCIAL, //15.00 - 16.00
+        SocialState.SOCIAL, //16.00 - 17.00
+        SocialState.SOCIAL, //17.00 - 18.00
+        SocialState.HOME, //18.00 - 19.00
+        SocialState.HOME, //19.00 - 20.00
+        SocialState.HOME, //20.00 - 21.00
+        SocialState.HOME, //21.00 - 22.00
+        SocialState.HOME, //22.00 - 23.00
+        SocialState.SLEEPING, //23.00 - 24.00
+    ];
+    
     //Hospitals
     public  int maxHospitalCapacity = 150;
     

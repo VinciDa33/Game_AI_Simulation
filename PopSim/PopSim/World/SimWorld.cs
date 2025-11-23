@@ -39,6 +39,21 @@ public class SimWorld
         foreach (Person p in population)
             p.Step(this, timeStep);
 
+        if (SimParameters.Instance.policiesList[0] == true)
+            SimParameters.Instance.infectionChancePerHour *= 0.99f;
+        
+        if (SimParameters.Instance.policiesList[1] == true)
+            SimParameters.Instance.infectionChancePerHour *= 0.9f;
+        
+        if (SimParameters.Instance.policiesList[2] == true)
+            SimParameters.Instance.infectionChancePerHour *= 0.9f;
+        
+        if (SimParameters.Instance.policiesList[3] == true)
+            
+        
+        
+        
+        
         hour++;
         if (hour >= 24)
         {

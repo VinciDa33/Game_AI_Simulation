@@ -124,13 +124,18 @@ public class Person
 
     private void UpdateSocialState(int hour, bool isWeekend)
     {
+        if (SimParameters.Instance.policiesList[4])
+        {
+            socialState = SimParameters.Instance.remoteSchedule[hour];
+        }
+        
         //A hospitalized person will stay hospitalized until recovery or death!
         if (socialState == SocialState.HOSPITALIZED)
             return;
         
         
         //If a person is symptomatic, they will always sleep or stay home 
-        if (healthState == HealthState.SYMPTOMATIC)
+        if (healthState == HealthState.SYMPTOMATIC && SimParameters.Instance.policiesList[5] )
         {
             socialState = SimParameters.Instance.baseSchedule[hour] == SocialState.SLEEPING ? SocialState.SLEEPING : SocialState.HOME;
             return;
