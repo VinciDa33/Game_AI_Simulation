@@ -69,7 +69,7 @@ public class Algorithm
         happinessValues.Add(world.worldStats.happiness);
     }
 
-    public int value()
+    public int Fitnessvalue()
     {
         return happinessAverage - deathAverage;
     }

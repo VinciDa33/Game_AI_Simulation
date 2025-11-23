@@ -8,7 +8,10 @@ public class AlgorithmManager
     Random random = new Random();
     private int generationSize = 10;
     private int generationCap = 100;
+    private int generationCount = 1;
 
+    
+    
     public void Start()
     {
         generatePop(generationSize);
@@ -31,6 +34,9 @@ public class AlgorithmManager
                 mutation(newPopulation[i]);
                 population[i].genome = newPopulation[i];
             }
+            generationCount++;
+            if (generationCount==generationCap)
+                LogManager.Instance.Log();
         }
         
     }
@@ -92,15 +98,15 @@ public class AlgorithmManager
         int[] index = new int[2];
         for (int i = 0; i < population.Count; i++)
         {
-            if (population[i].value() > selection[0])
+            if (population[i].Fitnessvalue() > selection[0])
             {
                 selection[1] = selection[0];
-                selection[0] = population[i].value();
+                selection[0] = population[i].Fitnessvalue();
                 index[1] = index[0];
                 index[0] = i;
-            }else if (population[i].value() > selection[1])
+            }else if (population[i].Fitnessvalue() > selection[1])
             {
-                selection[1] = population[i].value();
+                selection[1] = population[i].Fitnessvalue();
                 index[1] = i;
             }
         }
