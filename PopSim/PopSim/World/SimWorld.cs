@@ -1,4 +1,5 @@
 ﻿using PopSim.Sim;
+using PopSim.States;
 
 namespace PopSim.World;
 
@@ -20,6 +21,7 @@ public class SimWorld
 
     public void InitWorld()
     {
+        happiness = 100*SimParameters.Instance.populationSize;
         Console.WriteLine("Creating population...");
         for (int i = 0; i < SimParameters.Instance.populationSize; i++)
             population.Add(new Person());
@@ -37,22 +39,23 @@ public class SimWorld
     public void Step(int timeStep)
     {
         foreach (Person p in population)
+        {
             p.Step(this, timeStep);
+            if (p.healthState == HealthState.SYMPTOMATIC)
+                happiness -= 10;
+            if (p.healthState == HealthState.DEAD)
+                happiness -= 50;
+        }
 
-        if (SimParameters.Instance.policiesList[0] == true)
+
+        if (SimParameters.Instance.policiesList[0])
             SimParameters.Instance.infectionChancePerHour *= 0.99f;
         
-        if (SimParameters.Instance.policiesList[1] == true)
+        if (SimParameters.Instance.policiesList[1])
             SimParameters.Instance.infectionChancePerHour *= 0.9f;
         
-        if (SimParameters.Instance.policiesList[2] == true)
+        if (SimParameters.Instance.policiesList[2])
             SimParameters.Instance.infectionChancePerHour *= 0.9f;
-        
-        if (SimParameters.Instance.policiesList[3] == true)
-            
-        
-        
-        
         
         hour++;
         if (hour >= 24)
