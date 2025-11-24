@@ -6,7 +6,7 @@ public class LogManager
 {
     private static LogManager instance;
     
-    public List<Algorithm> bestGenomes;
+    public List<Algorithm> bestGenomes = new List<Algorithm>();
     
     public static LogManager Instance
     {
