@@ -34,6 +34,10 @@ public class AlgorithmManager
                 mutation(newPopulation[i]);
                 population[i].genome = newPopulation[i];
             }
+
+            if (generationCount%10 == 0)
+                LogManager.Instance.bestGenomes.Add(selection()[0]);
+                
             generationCount++;
             if (generationCount==generationCap)
                 LogManager.Instance.Log();
