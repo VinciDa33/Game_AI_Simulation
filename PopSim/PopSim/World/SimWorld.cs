@@ -22,15 +22,14 @@ public class SimWorld
     public void InitWorld()
     {
         happiness = 100*SimParameters.Instance.populationSize;
-        Console.WriteLine("Creating population...");
+        
         for (int i = 0; i < SimParameters.Instance.populationSize; i++)
             population.Add(new Person());
         
-        Console.WriteLine("Setting relations...");
+        
         foreach (Person p in population)
             p.SetRelations(this);
         
-        Console.WriteLine("Infecting patient Zero...");
         Random random = new Random();
         for (int i = 0; i < SimParameters.Instance.numberOfInitialInfections; i++)
             population[random.Next(0, population.Count)].Infect();

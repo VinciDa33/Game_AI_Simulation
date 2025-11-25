@@ -20,6 +20,9 @@ public class AlgorithmManager
             for (int i = 0; i < population.Count; i++)
             {
                 population[i].Start();
+                string genomeString = string.Join(", ", population[i].genome);
+                string fitnessString = population[i].Fitnessvalue().ToString();
+                Console.WriteLine(genomeString);
             }
             Console.WriteLine("Generation finished");
             List<bool>[] offspring = singlePointCrossover(selection());
@@ -39,8 +42,13 @@ public class AlgorithmManager
                 LogManager.Instance.bestGenomes.Add(selection()[0]);
                 
             generationCount++;
-            if (generationCount==generationCap)
+            if (j + 1 == generationCap)
+            {
                 LogManager.Instance.Log();
+                string genomeString = string.Join(", ", selection()[0].genome);
+                Console.WriteLine(genomeString);
+            }
+               
         }
         
     }
