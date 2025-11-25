@@ -20,6 +20,8 @@ public class AlgorithmManager
         for (int generation = 0; generation < generationCap; generation++)
         {
             Console.WriteLine($"Spinning up generation {generation}");
+            
+            threads.Clear();
             for (int i = 0; i < population.Count; i++)
             {
                 Thread t = new Thread(new ThreadStart(population[i].Start));
