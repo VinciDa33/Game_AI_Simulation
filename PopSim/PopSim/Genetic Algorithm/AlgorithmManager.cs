@@ -8,24 +8,36 @@ public class AlgorithmManager
 {
     private List<Algorithm> population = new List<Algorithm>();
     private int generationSize = 10;
-    private int generationCap = 100;
+    private int generationCap = 10;
 
-    
+    private List<Thread> threads = new List<Thread>();
     
     public void Start()
     {
+        Console.WriteLine("Starting Algorithm Manager!");
         GeneratePopulation(generationSize, 0);
         
         for (int generation = 0; generation < generationCap; generation++)
         {
+            Console.WriteLine($"Spinning up generation {generation}");
             for (int i = 0; i < population.Count; i++)
-                population[i].Start();
-            
+            {
+                Thread t = new Thread(new ThreadStart(population[i].Start));
+                t.Start();
+                threads.Add(t);
+                //population[i].Start();
+            }
+
+            while (ThreadsRunning())
+            {
+                //The show must go on
+            }
+
             Console.WriteLine("-- Generation Finished --");
 
             Algorithm[] bestAlgorithms = Selection();
-            if (generation % 10 == 0)
-                LogManager.Instance.genomesToLog.Add(bestAlgorithms[0]);
+            if (generation % 1 == 0)
+                LogManager.Instance.dataToLog.Add(bestAlgorithms[0].ToString());
             
             List<bool>[] offspringGenomes = SinglePointCrossover(bestAlgorithms);
             List<List<bool>> newGenomes = new List<List<bool>>();
@@ -34,16 +46,24 @@ public class AlgorithmManager
                 newGenomes.Add(offspringGenomes[i%2]);
         
             for (int i = 2; i < generationSize; i++)
-            {
                 Mutation(newGenomes[i]);
-                population[i].genome = newGenomes[i];
-            }
+
+            population.Clear();
+            for (int i = 0; i < generationSize; i++)
+                population.Add(new Algorithm(newGenomes[i], generation + 1));
         }
         
         LogManager.Instance.Log();
     }
-    
-    
+
+    private bool ThreadsRunning()
+    {
+        foreach (Thread t in threads)
+            if (t.IsAlive)
+                return true;
+
+        return false;
+    }
     
     private List<bool> GenerateGenome()
     {
@@ -92,7 +112,7 @@ public class AlgorithmManager
 
     private Algorithm[] Selection()
     {
-        int[] selection = [int.MinValue, int.MinValue];
+        float[] selection = [float.MinValue, float.MinValue];
         int[] index = new int[2];
         
         for (int i = 0; i < population.Count; i++)

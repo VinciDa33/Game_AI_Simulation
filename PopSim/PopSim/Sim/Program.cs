@@ -5,7 +5,7 @@ namespace PopSim;
 
 class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         AlgorithmManager manager = new AlgorithmManager();
         //SimManager manager = new SimManager();

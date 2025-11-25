@@ -23,11 +23,11 @@ public class Person
         
         UpdateSocialState(world);
         UpdateInfectedState(timeStep);
-        UpdateHealth(timeStep);
+        UpdateHealth(timeStep, world);
         
     }
 
-    private void UpdateHealth(int timeStep)
+    private void UpdateHealth(int timeStep, SimWorld world)
     {
         if (healthState == HealthState.INFECTED)
         {
@@ -42,6 +42,7 @@ public class Person
             {
                 healthState = HealthState.SYMPTOMATIC;
                 healthStateChangeTimeStep = timeStep;
+                world.happiness -= 10;
             }
         }
         
@@ -51,6 +52,7 @@ public class Person
             {
                 healthState = HealthState.RECOVERED;
                 healthStateChangeTimeStep = timeStep;
+                world.happiness += 10;
                 return;
             }
             
@@ -58,6 +60,7 @@ public class Person
             {
                 healthState = HealthState.DEAD;
                 healthStateChangeTimeStep = timeStep;
+                world.happiness -= 50;
             }
         }
     }

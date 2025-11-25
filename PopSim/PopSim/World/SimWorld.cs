@@ -5,7 +5,7 @@ namespace PopSim.World;
 
 public class SimWorld
 {
-    public float happiness { get; private set; }
+    public int happiness;
     
     public int day { get; private set; } = 0;
     public int hour { get; private set; } = 0;
@@ -42,21 +42,7 @@ public class SimWorld
         foreach (Person p in population)
         {
             p.Step(this, timeStep);
-            if (p.healthState == HealthState.SYMPTOMATIC)
-                happiness -= 10;
-            if (p.healthState == HealthState.DEAD)
-                happiness -= 50;
         }
-
-
-        if (worldParameters.policyStates[0])
-            SimParameters.Instance.infectionChancePerHour *= 0.99f;
-        
-        if (worldParameters.policyStates[1])
-            SimParameters.Instance.infectionChancePerHour *= 0.9f;
-        
-        if (worldParameters.policyStates[2])
-            SimParameters.Instance.infectionChancePerHour *= 0.9f;
         
         hour++;
         if (hour >= 24)

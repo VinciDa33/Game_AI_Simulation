@@ -16,17 +16,18 @@ public class LogManager
         }
     }
     
-    public List<Algorithm> genomesToLog = new List<Algorithm>();
+    public List<string> dataToLog = new List<string>();
     
     public void Log()
     {
+        Console.WriteLine("Writing Logs!");
         TextWriter? tw = null;
         try
         {
-            tw = new StreamWriter(File.OpenWrite("Log.txt"));
-            foreach (Algorithm pop in genomesToLog)
+            tw = new StreamWriter(File.Create("Log.txt"));
+            foreach (string data in dataToLog)
             {
-                tw.WriteLine(pop);
+                tw.WriteLine(data);
             }
         }
         catch (Exception e)
