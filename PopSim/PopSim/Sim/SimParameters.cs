@@ -5,7 +5,7 @@ namespace PopSim.Sim;
 
 public class SimParameters
 {
-    private static SimParameters instance;
+    private static SimParameters? instance;
 
     public static SimParameters Instance
     {
@@ -19,7 +19,17 @@ public class SimParameters
 
     private SimParameters()
     {
-        policiesList = new List<bool> {awareness, sanitise, mask, remote, isolation, sLockdown, tLockdown, vaccine};
+        policiesList = new List<Policies>
+        {
+            Policies.Awareness, 
+            Policies.Sanitise, 
+            Policies.Mask, 
+            Policies.Remote, 
+            Policies.Isolation, 
+            Policies.SLockdown, 
+            Policies.TLockdown, 
+            Policies.Vaccine
+        };
     }
     
     
@@ -117,16 +127,8 @@ public class SimParameters
     public  int maxHospitalCapacity = 150;
     
     //policies
-    public bool awareness;
-    public bool sanitise;
-    public bool mask;
-    public bool remote;
-    public bool isolation;
-    public bool sLockdown;
-    public bool tLockdown;
-    public bool vaccine;
 
-    public List<bool> policiesList;
+    public List<Policies> policiesList;
     
     //Infection
     public int numberOfInitialInfections = 100;
@@ -138,20 +140,4 @@ public class SimParameters
     public float chanceOfRecoveryFromSymptomaticPerHour = 0.005f; //0.5%
 
     public bool immuneWithAntibodies = false;
-    
-    public void updateNumbers()
-    {
-        if (awareness)
-        {
-            infectionChancePerHour = infectionChancePerHour * 0.9f;
-        }
-        if (sanitise)
-        {
-            infectionChancePerHour =  infectionChancePerHour * 0.9f;
-        }
-        if (mask)
-        {
-            infectionChancePerHour =  infectionChancePerHour * 0.9f;
-        }
-    }
 }

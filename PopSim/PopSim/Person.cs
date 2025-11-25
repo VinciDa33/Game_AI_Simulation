@@ -21,7 +21,7 @@ public class Person
         if (healthState == HealthState.DEAD)
             return;
         
-        UpdateSocialState(world.hour, world.isWeekend);
+        UpdateSocialState(world);
         UpdateInfectedState(timeStep);
         UpdateHealth(timeStep);
         
@@ -122,11 +122,12 @@ public class Person
         return false;
     }
 
-    private void UpdateSocialState(int hour, bool isWeekend)
+    private void UpdateSocialState(SimWorld world)
     {
-        if (SimParameters.Instance.policiesList[4])
+        if (world.worldParameters.policyStates[4])
         {
-            socialState = SimParameters.Instance.remoteSchedule[hour];
+            socialState = SimParameters.Instance.remoteSchedule[world.hour];
+            return;
         }
         
         //A hospitalized person will stay hospitalized until recovery or death!
@@ -135,15 +136,15 @@ public class Person
         
         
         //If a person is symptomatic, they will always sleep or stay home 
-        if (healthState == HealthState.SYMPTOMATIC && SimParameters.Instance.policiesList[5] )
+        if (healthState == HealthState.SYMPTOMATIC && world.worldParameters.policyStates[5] )
         {
-            socialState = SimParameters.Instance.baseSchedule[hour] == SocialState.SLEEPING ? SocialState.SLEEPING : SocialState.HOME;
+            socialState = SimParameters.Instance.baseSchedule[world.hour] == SocialState.SLEEPING ? SocialState.SLEEPING : SocialState.HOME;
             return;
         }
         
         
         //Otherwise, while healthy and infected they will follow the base schedule
-        socialState = isWeekend ? SimParameters.Instance.baseWeekendSchedule[hour] : SimParameters.Instance.baseSchedule[hour];
+        socialState = world.isWeekend ? SimParameters.Instance.baseWeekendSchedule[world.hour] : SimParameters.Instance.baseSchedule[world.hour];
     }
 
     public void SetRelations(SimWorld world)

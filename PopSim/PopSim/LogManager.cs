@@ -4,29 +4,38 @@ namespace PopSim;
 
 public class LogManager
 {
-    private static LogManager instance;
-    
-    public List<Algorithm> bestGenomes = new List<Algorithm>();
+    private static LogManager? instance;
     
     public static LogManager Instance
     {
         get
         {
             if (instance == null)
-            {
                 instance = new LogManager();
-            }
             return instance;
         }
     }
     
+    public List<Algorithm> genomesToLog = new List<Algorithm>();
+    
     public void Log()
     {
-        foreach (Algorithm pop in bestGenomes)
+        TextWriter? tw = null;
+        try
         {
-            string genomeString = string.Join(", ", pop.genome);
-            string log = $"Generation {bestGenomes.Count}: Fitness = {pop.Fitnessvalue()}: Genome = {genomeString}";
-            File.AppendAllText("log.txt", log);
+            tw = new StreamWriter(File.OpenWrite("Log.txt"));
+            foreach (Algorithm pop in genomesToLog)
+            {
+                tw.WriteLine(pop);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Oh no.\n" + e.Message);
+        }
+        finally
+        {
+            tw?.Close();
         }
     }
     

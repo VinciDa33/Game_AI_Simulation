@@ -11,17 +11,19 @@ public class SimWorld
     public int hour { get; private set; } = 0;
     public bool isWeekend { get; private set; } = false;
 
-    public WorldStats worldStats;
+    public WorldStats worldStats { get; private set; }
+    public WorldParameters worldParameters { get; private set; }
     public List<Person> population { get; private set; } = new List<Person>();
     
     public SimWorld()
     {
         worldStats = new WorldStats(this);
+        worldParameters = new WorldParameters();
     }
 
     public void InitWorld()
     {
-        happiness = 100*SimParameters.Instance.populationSize;
+        happiness = 100 * SimParameters.Instance.populationSize;
         
         for (int i = 0; i < SimParameters.Instance.populationSize; i++)
             population.Add(new Person());
@@ -47,13 +49,13 @@ public class SimWorld
         }
 
 
-        if (SimParameters.Instance.policiesList[0])
+        if (worldParameters.policyStates[0])
             SimParameters.Instance.infectionChancePerHour *= 0.99f;
         
-        if (SimParameters.Instance.policiesList[1])
+        if (worldParameters.policyStates[1])
             SimParameters.Instance.infectionChancePerHour *= 0.9f;
         
-        if (SimParameters.Instance.policiesList[2])
+        if (worldParameters.policyStates[2])
             SimParameters.Instance.infectionChancePerHour *= 0.9f;
         
         hour++;
