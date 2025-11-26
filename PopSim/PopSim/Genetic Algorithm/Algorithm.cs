@@ -11,7 +11,7 @@ public class Algorithm
     
     private SimWorld world;
     public int timeStep = 0;
-    private int simDuration = 8760;
+    private int simDuration = 4320;
     
     //Fitness values
     //public List<int> infectionValues = new List<int>();
