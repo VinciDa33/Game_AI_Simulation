@@ -134,7 +134,7 @@ public class SimParameters
     public int numberOfInitialInfections = 100;
     public float infectionChancePerHour = 0.07f; //7%
     public int meanTimeFromInfectionToSymptomatic = 120; //In hours
-    public int meanTimeFromSymptomaticToDeath = 288; //In hours
+    public float DeathChance = 0.0412f; //In hours
 
     public float chanceOfRecoveryFromInfectionPerHour = 0.01f; //1%
     public float chanceOfRecoveryFromSymptomaticPerHour = 0.005f; //0.5%

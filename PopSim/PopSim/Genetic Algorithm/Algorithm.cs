@@ -11,7 +11,7 @@ public class Algorithm
     
     private SimWorld world;
     public int timeStep = 0;
-    private int simDuration = 8766;
+    private int simDuration = 8760;
     
     //Fitness values
     //public List<int> infectionValues = new List<int>();
@@ -69,13 +69,13 @@ public class Algorithm
         for (int i = 0; i < SimParameters.Instance.policiesList.Count; i++)
         {
             if (!world.worldParameters.policyStates[0] && genome[0])
-                world.worldParameters.infectionChancePerHour *= 0.99f;
+                world.worldParameters.infectionChancePerHour *= 0.80f;
 
             if (!world.worldParameters.policyStates[1] && genome[1])
-                world.worldParameters.infectionChancePerHour *= 0.9f;
+                world.worldParameters.infectionChancePerHour *= 0.5f;
 
             if (!world.worldParameters.policyStates[2] && genome[2])
-                world.worldParameters.infectionChancePerHour *= 0.9f;
+                world.worldParameters.infectionChancePerHour *= 0.5f;
             
             world.worldParameters.policyStates[i] = genome[i];
         }
