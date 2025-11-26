@@ -50,18 +50,20 @@ public class Person
         {
             if (RandomManager.Instance.GetNextDouble() < SimParameters.Instance.chanceOfRecoveryFromSymptomaticPerHour)
             {
+                if (RandomManager.Instance.GetNextDouble() < world.worldParameters.deathChance)
+                {
+                    healthState = HealthState.DEAD;
+                    healthStateChangeTimeStep = timeStep;
+                    world.happiness -= 50;
+                    return;
+                }
                 healthState = HealthState.RECOVERED;
                 healthStateChangeTimeStep = timeStep;
                 world.happiness += 10;
                 return;
             }
             
-            if (timeStep >= healthStateChangeTimeStep + SimParameters.Instance.meanTimeFromSymptomaticToDeath)
-            {
-                healthState = HealthState.DEAD;
-                healthStateChangeTimeStep = timeStep;
-                world.happiness -= 50;
-            }
+
         }
     }
     

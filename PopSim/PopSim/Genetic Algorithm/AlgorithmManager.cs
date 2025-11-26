@@ -8,7 +8,7 @@ public class AlgorithmManager
 {
     private List<Algorithm> population = new List<Algorithm>();
     private int generationSize = 10;
-    private int generationCap = 10;
+    private int generationCap = 100;
 
     private List<Thread> threads = new List<Thread>();
     
@@ -133,7 +133,4 @@ public class AlgorithmManager
 
         return [population[index[0]], population[index[1]]];
     }
-    
-    
-    
 }
