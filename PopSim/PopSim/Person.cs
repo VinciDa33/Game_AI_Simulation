@@ -10,6 +10,7 @@ public class Person
     public HealthState healthState { get; private set; }= HealthState.HEALTHY;
     public SocialState socialState { get; private set; }  = SocialState.HOME;
     private int healthStateChangeTimeStep = 0;
+    private float resitance = 0.0f;
     
     public List<Person> familyRealtions { get; private set; } = new List<Person>();
     public List<Person> socialRelations { get; private set; } = new List<Person>();
@@ -20,47 +21,62 @@ public class Person
         //We do not need to do anything for dead people
         if (healthState == HealthState.DEAD)
             return;
+
+        resitance *= 0.98f; //resistance falls over time
         
         UpdateSocialState(world);
         UpdateInfectedState(timeStep);
         UpdateHealth(timeStep, world);
+
         
+        //TODO: Vaccine policy
+        if (world.policyManager.GetPolicy("Vaccine").isEnabled)
+        {
+            //1% chance per hour, to get a vaccine, if vaccine program is enabled.
+            if (RandomManager.Instance.GetNextDouble() < 0.01f)
+                resitance = 0.8f;
+        }
     }
 
     private void UpdateHealth(int timeStep, SimWorld world)
     {
         if (healthState == HealthState.INFECTED)
         {
-            if (RandomManager.Instance.GetNextDouble() < SimParameters.Instance.chanceOfRecoveryFromInfectionPerHour)
+            if (RandomManager.Instance.GetNextDouble() < world.worldParameters.chanceOfRecoveryFromInfectionPerHour)
             {
                 healthState = HealthState.RECOVERED;
+                resitance = 0.4f;
                 healthStateChangeTimeStep = timeStep;
                 return;
             }
             
-            if (timeStep >= healthStateChangeTimeStep + SimParameters.Instance.meanTimeFromInfectionToSymptomatic)
+            if (timeStep >= healthStateChangeTimeStep + world.worldParameters.meanTimeFromInfectionToSymptomatic)
             {
                 healthState = HealthState.SYMPTOMATIC;
                 healthStateChangeTimeStep = timeStep;
-                world.happiness -= 10;
+                world.happiness -= 2;
             }
         }
         
         else if (healthState == HealthState.SYMPTOMATIC)
         {
-            if (RandomManager.Instance.GetNextDouble() < SimParameters.Instance.chanceOfRecoveryFromSymptomaticPerHour)
+            if (RandomManager.Instance.GetNextDouble() < world.worldParameters.chanceOfRecoveryFromSymptomaticPerHour)
             {
                 healthState = HealthState.RECOVERED;
+                resitance = 0.4f;
                 healthStateChangeTimeStep = timeStep;
-                world.happiness += 10;
+                world.happiness += 2;
                 return;
             }
             
-            if (timeStep >= healthStateChangeTimeStep + SimParameters.Instance.meanTimeFromSymptomaticToDeath)
+            if (timeStep >= healthStateChangeTimeStep + world.worldParameters.meanTimeFromSymptomaticToDeadly)
             {
-                healthState = HealthState.DEAD;
-                healthStateChangeTimeStep = timeStep;
-                world.happiness -= 50;
+                if (RandomManager.Instance.GetNextDouble() < world.worldParameters.chanceOfDeath)
+                {
+                    healthState = HealthState.DEAD; 
+                    healthStateChangeTimeStep = timeStep;
+                    world.happiness -= 5;
+                }
             }
         }
     }
@@ -115,6 +131,10 @@ public class Person
         //Check if the person becomes infected
         if (RandomManager.Instance.GetNextDouble() < SimParameters.Instance.infectionChancePerHour)
         {
+            //Check if this person resists
+            if (RandomManager.Instance.GetNextDouble() < resitance)
+                return false;
+            
             //The person was infected
             healthState = HealthState.INFECTED;
             healthStateChangeTimeStep = timeStep;
@@ -127,9 +147,18 @@ public class Person
 
     private void UpdateSocialState(SimWorld world)
     {
-        if (world.worldParameters.policyStates[4])
+        //TODO: Total lockdown
+        //At home at all times
+        if (world.policyManager.GetPolicy("Total_Lockdown").isEnabled)
         {
-            socialState = SimParameters.Instance.remoteSchedule[world.hour];
+            socialState = SimParameters.Instance.baseSchedule[world.hour] == SocialState.SLEEPING ? SocialState.SLEEPING : SocialState.HOME;
+        }
+        
+        //TODO: Remote work policy implementation
+        //Normal weekends, all weekday work is done from home
+        if (world.policyManager.GetPolicy("Remote").isEnabled)
+        {
+            socialState = world.isWeekend ? SimParameters.Instance.baseWeekendSchedule[world.hour] : SimParameters.Instance.remoteSchedule[world.hour];
             return;
         }
         
@@ -137,9 +166,9 @@ public class Person
         if (socialState == SocialState.HOSPITALIZED)
             return;
         
-        
+        //TODO: Isolation policy implementation
         //If a person is symptomatic, they will always sleep or stay home 
-        if (healthState == HealthState.SYMPTOMATIC && world.worldParameters.policyStates[5] )
+        if (healthState == HealthState.SYMPTOMATIC && world.policyManager.GetPolicy("Isolation").isEnabled)
         {
             socialState = SimParameters.Instance.baseSchedule[world.hour] == SocialState.SLEEPING ? SocialState.SLEEPING : SocialState.HOME;
             return;

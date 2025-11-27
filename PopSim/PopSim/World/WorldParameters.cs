@@ -1,27 +1,28 @@
-﻿using PopSim.Sim;
+﻿using PopSim.Policies;
+using PopSim.Sim;
 
 namespace PopSim.World;
 
 public class WorldParameters
 {
-    public bool[] policyStates;
     public float infectionChancePerHour;
 
     public int meanTimeFromInfectionToSymptomatic;
-    public int meanTimeFromSymptomaticToDeath;
-
+    public int meanTimeFromSymptomaticToDeadly = 168; //In hours
+    public float chanceOfDeath = 0.0412f;
+    
     public float chanceOfRecoveryFromInfectionPerHour;
     public float chanceOfRecoveryFromSymptomaticPerHour;
-
+    
     public bool immuneWithAntibodies;
     
     public WorldParameters()
     {
-        policyStates = new bool[SimParameters.Instance.policiesList.Count];
         infectionChancePerHour = SimParameters.Instance.infectionChancePerHour;
 
         meanTimeFromInfectionToSymptomatic = SimParameters.Instance.meanTimeFromInfectionToSymptomatic;
-        meanTimeFromSymptomaticToDeath = SimParameters.Instance.meanTimeFromSymptomaticToDeath;
+        meanTimeFromSymptomaticToDeadly = SimParameters.Instance.meanTimeFromSymptomaticToDeadly;
+        chanceOfDeath = SimParameters.Instance.chanceOfDeath;
 
         chanceOfRecoveryFromInfectionPerHour = SimParameters.Instance.chanceOfRecoveryFromInfectionPerHour;
         chanceOfRecoveryFromSymptomaticPerHour = SimParameters.Instance.chanceOfRecoveryFromSymptomaticPerHour;
