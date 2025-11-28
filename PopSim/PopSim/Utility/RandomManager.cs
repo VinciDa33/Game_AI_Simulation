@@ -29,6 +29,11 @@ public class RandomManager
     {
         return random.NextDouble();
     }
+
+    public double GetNextDouble(double min, double max)
+    {
+        return min + random.NextDouble() * (max - min);
+    }
     
     /// <summary>
     /// Random integer between 0 and integer max

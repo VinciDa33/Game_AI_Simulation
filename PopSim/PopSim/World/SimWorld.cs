@@ -6,24 +6,25 @@ namespace PopSim.World;
 public class SimWorld
 {
     public int happiness;
-    
+    public List<Person> population { get; private set; } = new List<Person>();
+
     public int day { get; private set; } = 0;
     public int hour { get; private set; } = 0;
     public bool isWeekend { get; private set; } = false;
 
     public WorldStats worldStats { get; private set; }
     public WorldParameters worldParameters { get; private set; }
-    public List<Person> population { get; private set; } = new List<Person>();
-    
+    public PolicyManager policyManager { get; private set; } 
     public SimWorld()
     {
         worldStats = new WorldStats(this);
         worldParameters = new WorldParameters();
+        policyManager = new PolicyManager(this);
     }
 
     public void InitWorld()
     {
-        happiness = 100 * SimParameters.Instance.populationSize;
+        happiness = 5 * SimParameters.Instance.populationSize;
         
         for (int i = 0; i < SimParameters.Instance.populationSize; i++)
             population.Add(new Person());
@@ -43,6 +44,8 @@ public class SimWorld
         {
             p.Step(this, timeStep);
         }
+        
+        policyManager.StepPolicies();
         
         hour++;
         if (hour >= 24)
