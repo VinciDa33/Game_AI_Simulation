@@ -11,7 +11,7 @@ public class EvolutionManager
     private List<GeneticAgent> population = [];
     private int genomeSize = 24;
     private int generationSize = 15;
-    private int generationCap = 80;
+    private int generationCap = 10;
 
     private List<Thread> threads = [];
     
@@ -90,9 +90,12 @@ public class EvolutionManager
     
     private Dictionary<int, bool[]> GenerateGenome(){
         Dictionary<int, bool[]> genome = new Dictionary<int, bool[]>();
-        for (int i = 0; i < genomeSize; i++)
+        while (genome.Count < genomeSize)
         {
             GenerateDay(out int day,out bool[] policies);
+            if (genome.ContainsKey(day))
+                continue;
+            
             genome.Add(day,policies);
         }
 
@@ -116,16 +119,17 @@ public class EvolutionManager
 
         List<int> dayA = new List<int>(parentAgentA.genome.Keys);
         List<int> dayB = new List<int>(parentAgentB.genome.Keys);
+        int length = dayA.Count > dayB.Count ? dayB.Count : dayA.Count;
         
-        for (int i = 0; i < genomeSize; i++)
+        for (int i = 0; i < length; i++)
         {
             if (RandomManager.Instance.GetNextInt(2) == 1)
-            { 
-                genome.Add(dayA[i], parentAgentA.genome[dayA[i]]);
+            {
+                genome.TryAdd(dayA[i], parentAgentA.genome[dayA[i]]);
             }
             else 
             { 
-                genome.Add(dayB[i], parentAgentB.genome[dayB[i]]);
+                genome.TryAdd(dayB[i], parentAgentB.genome[dayB[i]]);
             }
         }
         return genome;
@@ -135,14 +139,14 @@ public class EvolutionManager
     {
         List<int> days = new List<int>(genome.Keys);
         
-            for (int j = 0; j < maxMutations; j++)
+            for (int i = 0; i < maxMutations; i++)
             {
                 int r = RandomManager.Instance.GetNextInt(days.Count);
                 if (RandomManager.Instance.GetNextDouble() <= mutationRate)
                 {
                     genome.Remove(days[r]);
                     GenerateDay(out int day, out bool[] policies);
-                    genome.Add(day, policies);
+                    genome.TryAdd(day, policies);
                 }
             } 
             

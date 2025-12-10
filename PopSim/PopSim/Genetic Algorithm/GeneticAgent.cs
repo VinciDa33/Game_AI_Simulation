@@ -94,8 +94,15 @@ public class GeneticAgent
         string str = $"Agent = G{generation}A{agentId}\nFitness = {FitnessValue()}\n";
         str += $"Total deaths = {cumulativeDeathCount[^1]}\n";
         
-        str += "Genome = [";
-        str += string.Join(", ", genome);
+        str += "Genome = [Day : ";
+        List<int> keys = new List<int>(genome.Keys);
+        for (int i = 0; i < genome.Count; i++)
+        {
+            str += keys[i];
+            str += " - ";
+            str += string.Join(", ", genome[keys[i]]);
+        }
+        
         str += "]\n";
         return str;
     }
