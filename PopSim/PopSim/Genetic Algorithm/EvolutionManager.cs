@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using PopSim.Sim;
 using PopSim.Utility;
 using PopSim.World;
@@ -8,6 +9,7 @@ namespace PopSim.Genetic_Algorithm;
 public class EvolutionManager
 {
     private List<GeneticAgent> population = [];
+    private int genomeSize = 24;
     private int generationSize = 15;
     private int generationCap = 80;
 
@@ -19,7 +21,7 @@ public class EvolutionManager
         
         //Initial population
         for (int i = 0; i < generationSize; i++)
-            population.Add(new GeneticAgent(GenerateGenome(24), 0, i));
+            population.Add(new GeneticAgent(GenerateGenome(), 0, i));
         
         
         //Run multiple generations
@@ -49,7 +51,8 @@ public class EvolutionManager
             //Add the best agent of the generation to the log
             LogManager.Instance.dataToLog.Add(bestAgent.ToString());
             
-            SinglePointCrossover(bestAgent, secondBestAgent, out float[] genomeA, out float[] genomeB);
+            UniformCrossover(bestAgent, secondBestAgent, out Dictionary<int, bool[]> genomeA);
+            UniformCrossover(bestAgent, secondBestAgent, out Dictionary<int, bool[]> genomeB);
             
             //Clear population, and create a new one
             population.Clear();
@@ -58,13 +61,13 @@ public class EvolutionManager
             population.Add(new GeneticAgent(bestAgent.genome, bestAgent.generation, 0));
 
             //Wildcards - 2 totally new random agents
-            population.Add(new GeneticAgent(GenerateGenome(24), generation + 1, 0));
-            population.Add(new GeneticAgent(GenerateGenome(24), generation + 1, 0));
+            population.Add(new GeneticAgent(GenerateGenome(), generation + 1, 0));
+            population.Add(new GeneticAgent(GenerateGenome(), generation + 1, 0));
             
             //Offspring - Based on the 2 best agents
             for (int i = population.Count; i < generationSize; i++)
             {
-                float[] newGenome = i % 2 == 0 ? genomeA : genomeB;
+                Dictionary<int, bool[]> newGenome = i % 2 == 0 ? genomeA : genomeB;
                 population.Add(new GeneticAgent(Mutate(newGenome), generation + 1, 0));
             }
 
@@ -85,50 +88,64 @@ public class EvolutionManager
         return false;
     }
     
-    private float[] GenerateGenome(int size)
-    {
-        float[] genome = new float[size];
-        for (int i = 0; i < size; i++)
+    private Dictionary<int, bool[]> GenerateGenome(){
+        Dictionary<int, bool[]> genome = new Dictionary<int, bool[]>();
+        for (int i = 0; i < genomeSize; i++)
         {
-            genome[i] = (float) RandomManager.Instance.GetNextDouble(-0.6d, 0.6d);
+            GenerateDay(out int day,out bool[] policies);
+            genome.Add(day,policies);
+        }
+
+        return genome;
+    }
+
+    private void GenerateDay(out int day, out bool[] policiesList)
+    {
+            day = RandomManager.Instance.GetNextInt(AlgorithmParameters.Instance.simDuration/24);
+        
+            policiesList = new bool[8];
+            for (int i = 0; i < 8; i++)
+            {
+                policiesList[i] = RandomManager.Instance.GetNextInt(2) == 0;
+            } 
+    }
+
+    private Dictionary<int, bool[]> UniformCrossover(GeneticAgent parentAgentA, GeneticAgent parentAgentB, out Dictionary<int, bool[]> genome)
+    {
+        genome = new Dictionary<int, bool[]>();
+
+        List<int> dayA = new List<int>(parentAgentA.genome.Keys);
+        List<int> dayB = new List<int>(parentAgentB.genome.Keys);
+        
+        for (int i = 0; i < genomeSize; i++)
+        {
+            if (RandomManager.Instance.GetNextInt(2) == 1)
+            { 
+                genome.Add(dayA[i], parentAgentA.genome[dayA[i]]);
+            }
+            else 
+            { 
+                genome.Add(dayB[i], parentAgentB.genome[dayB[i]]);
+            }
         }
         return genome;
     }
 
-    private void SinglePointCrossover(GeneticAgent parentAgentA, GeneticAgent parentAgentB, out float[] genomeA, out float[] genomeB)
+    private Dictionary<int, bool[]> Mutate(Dictionary<int,bool[]> genome, int maxMutations = 2, double mutationRate = 0.5)
     {
-        int size = parentAgentA.genome.Length;
+        List<int> days = new List<int>(genome.Keys);
         
-        genomeA = new float[size];
-        genomeB = new float[size];
-        
-        int p = RandomManager.Instance.GetNextInt(1, size);
-
-        for (int i = 0; i < size; i++)
-        {
-            if (i <= p)
+            for (int j = 0; j < maxMutations; j++)
             {
-                genomeA[i] = parentAgentA.genome[i];
-                genomeB[i] = parentAgentB.genome[i];
-            }
-            else
-            {
-                genomeA[i] = parentAgentB.genome[i];
-                genomeB[i] = parentAgentA.genome[i];
-            }
-        }
-    }
-
-    private float[] Mutate(float[] genome, int maxMutations = 5)
-    {
-        int numberOfMutations = RandomManager.Instance.GetNextInt(maxMutations + 1);
-        
-        for (int i = 0; i < maxMutations; i++)
-        {
-            int r = RandomManager.Instance.GetNextInt(genome.Length);
-            genome[r] += (float) RandomManager.Instance.GetNextDouble(-0.25d, 0.25d);
-        }
-
+                int r = RandomManager.Instance.GetNextInt(days.Count);
+                if (RandomManager.Instance.GetNextDouble() <= mutationRate)
+                {
+                    genome.Remove(days[r]);
+                    GenerateDay(out int day, out bool[] policies);
+                    genome.Add(day, policies);
+                }
+            } 
+            
         return genome;
     }
 

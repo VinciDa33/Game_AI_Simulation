@@ -6,12 +6,12 @@ namespace PopSim.Genetic_Algorithm;
 
 public class GeneticAgent
 {
-    public float[] genome;
+    public Dictionary<int, bool[]> genome =  new Dictionary<int, bool[]>();
     public int generation { get; private set; }
     public int agentId;
     
     private SimWorld world;
-    private int simDuration = 4383; //8766 ;
+    private int simDuration = AlgorithmParameters.Instance.simDuration;
     
     //Fitness values
     public List<int> cumulativeDeathCount = new List<int>();
@@ -24,7 +24,7 @@ public class GeneticAgent
     private float happinessAverage {get; set;}
     
     
-    public GeneticAgent(float[] genome, int generation, int agentId)
+    public GeneticAgent(Dictionary<int, bool[]> genome, int generation, int agentId)
     {
         this.genome = genome;
         this.generation = generation;
@@ -57,28 +57,14 @@ public class GeneticAgent
 
     private void EnactPolicies(int timeStep)
     {
+        if (timeStep%24 != 0) return;
+        if (!genome.ContainsKey(timeStep / 24)) return;
         for (int i = 0; i < world.policyManager.policies.Length; i++)
         {
-            int geneIndex = i * 3;
-            float progress = timeStep / (float)simDuration;
-            
-            //Offset index based on progress through the sim
-            if (progress > 0.66f)
-                geneIndex += 2;
-            else if (progress > 0.33f)
-                geneIndex += 1;
-            
-            //Get a random value from -1 to 1
-            double rand = RandomManager.Instance.GetNextDouble(-0.6d, 0.6d);
-            
-            //Offset the random value using this agents genome
-            rand += genome[geneIndex];
-            
-            //If the value is large, enable this policy. If it is low, disable it
-            if (rand > 0.75d)
+            if (genome[timeStep / 24][i] = true)
+            {
                 world.policyManager.policies[i].EnablePolicy();
-            else if (rand < -0.75d)
-                world.policyManager.policies[i].DisablePolicy();
+            }
         }
     }
     
