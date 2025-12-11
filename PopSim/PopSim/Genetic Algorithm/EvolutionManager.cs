@@ -177,6 +177,42 @@ public class EvolutionManager
             }
         }
     }
+
+    private void Domination(List<GeneticAgent> geneticAgents)
+    {
+        foreach (GeneticAgent agent in geneticAgents)
+        {
+            foreach (GeneticAgent otherAgent in geneticAgents)
+            {
+                if (agent.happinessAverage >= otherAgent.happinessAverage &&
+                    agent.deathRateAverage <= otherAgent.deathRateAverage &&
+                    agent.happinessAverage > otherAgent.happinessAverage ||
+                    agent.deathRateAverage < otherAgent.deathRateAverage)
+                {
+                    otherAgent.dominationCount++;
+                    agent.dominates.Add(otherAgent.agentId);
+                }
+                    
+            }
+            if (agent.dominationCount == 0)
+                agent.frontRank = 1;
+        }
+
+        foreach (GeneticAgent agent in geneticAgents)
+        {
+            if (agent.frontRank != 0)
+            {
+                foreach (GeneticAgent otherAgent in geneticAgents)
+                {
+                    if (otherAgent.frontRank == 0 && otherAgent.dominates.Contains(agent.agentId))
+                        agent.dominationCount--;
+                }
+
+                if (agent.frontRank == 0)
+                    agent.frontRank = 1;
+            }
+        }
+    }
     
     
     

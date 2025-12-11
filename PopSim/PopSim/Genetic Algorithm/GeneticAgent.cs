@@ -20,9 +20,12 @@ public class GeneticAgent
 
     //Averages
     //private int infectionAverage {get; set;}
-    private float deathRateAverage {get; set;}
-    private float happinessAverage {get; set;}
-    
+    public float deathRateAverage {get; set;}
+    public float happinessAverage {get; set;}
+
+    public int dominationCount = 0;
+    public List<int> dominates;
+    public int frontRank;
     
     public GeneticAgent(Dictionary<int, bool[]> genome, int generation, int agentId)
     {
