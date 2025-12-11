@@ -24,8 +24,9 @@ public class GeneticAgent
     public float happinessAverage {get; set;}
 
     public int dominationCount = 0;
-    public List<int> dominates;
+    public List<int> dominates = new List<int>();
     public int frontRank;
+    public double crowdingDistance;
     
     public GeneticAgent(Dictionary<int, bool[]> genome, int generation, int agentId)
     {
