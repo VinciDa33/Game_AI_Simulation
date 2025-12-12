@@ -5,26 +5,27 @@ namespace PopSim.World;
 
 public class SimWorld
 {
-    public int happiness;
     public List<Person> population { get; private set; } = new List<Person>();
 
     public int day { get; private set; } = 0;
     public int hour { get; private set; } = 0;
     public bool isWeekend { get; private set; } = false;
 
-    public WorldStats worldStats { get; private set; }
+    public WorldState worldState { get; private set; }
+    public WorldStatistics worldStatistics { get; private set; }
     public WorldParameters worldParameters { get; private set; }
     public PolicyManager policyManager { get; private set; } 
     public SimWorld()
     {
-        worldStats = new WorldStats(this);
+        worldState = new WorldState(this);
+        worldStatistics = new WorldStatistics(this);
         worldParameters = new WorldParameters();
         policyManager = new PolicyManager(this);
     }
 
     public void InitWorld()
     {
-        happiness = 5 * SimParameters.Instance.populationSize;
+        worldState.happiness = 5 * SimParameters.Instance.populationSize;
         
         for (int i = 0; i < SimParameters.Instance.populationSize; i++)
             population.Add(new Person());
@@ -41,9 +42,10 @@ public class SimWorld
     public void Step(int timeStep)
     {
         foreach (Person p in population)
-        {
             p.Step(this, timeStep);
-        }
+        
+        worldState.UpdateState();
+        worldStatistics.Update(timeStep);
         
         policyManager.StepPolicies();
         

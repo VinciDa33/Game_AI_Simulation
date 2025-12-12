@@ -2,11 +2,13 @@
 
 namespace PopSim.Utility;
 
-public class HappinessComparator : Comparer<GeneticAgent> {
-    public override int Compare(GeneticAgent a, GeneticAgent b) {
-        if (a.happinessAverage == b.happinessAverage)
+public class HappinessComparator : Comparer<Agent> {
+    public override int Compare(Agent a, Agent b) {
+        if (a.GetFitnessHappiness() == b.GetFitnessHappiness())
             return 0;
-        if (a.happinessAverage > b.happinessAverage)
+        
+        //Remember we are maximizing happiness
+        if (a.GetFitnessHappiness() > b.GetFitnessHappiness())
             return 1;
         return -1;
     }

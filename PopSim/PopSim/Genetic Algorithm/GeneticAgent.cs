@@ -4,6 +4,19 @@ using PopSim.World;
 
 namespace PopSim.Genetic_Algorithm;
 
+
+// THIS CLASS IS REDUNDANT AND COULD PROBABLY BE DELETED!
+
+// THIS CLASS IS REDUNDANT AND COULD PROBABLY BE DELETED!
+
+// THIS CLASS IS REDUNDANT AND COULD PROBABLY BE DELETED!
+
+// THIS CLASS IS REDUNDANT AND COULD PROBABLY BE DELETED!
+
+// THIS CLASS IS REDUNDANT AND COULD PROBABLY BE DELETED!
+
+
+
 public class GeneticAgent
 {
     public Dictionary<int, bool[]> genome =  new Dictionary<int, bool[]>();
@@ -74,16 +87,16 @@ public class GeneticAgent
     
     public void Fitness()
     {
-        //infectionValues.Add(world.worldStats.infectedCount);
-        world.worldStats.UpdateStats();
+        //infectionValues.Add(world.worldState.infectedCount);
+        world.worldState.UpdateState();
         
         if (cumulativeDeathCount.Count != 0)
-            deathRateValues.Add(world.worldStats.deathCount - cumulativeDeathCount[^1]);
+            deathRateValues.Add(world.worldState.deathCount - cumulativeDeathCount[^1]);
         else
-            deathRateValues.Add(world.worldStats.deathCount);
+            deathRateValues.Add(world.worldState.deathCount);
         
-        cumulativeDeathCount.Add(world.worldStats.deathCount);
-        happinessValues.Add(world.worldStats.happiness);
+        cumulativeDeathCount.Add(world.worldState.deathCount);
+        happinessValues.Add(world.worldState.happiness);
     }
 
     public float FitnessValue()
@@ -94,7 +107,7 @@ public class GeneticAgent
 
     public override string ToString()
     {
-        world.worldStats.UpdateStats();
+        world.worldState.UpdateState();
         string str = $"Agent = G{generation}A{agentId}\nFitness = {FitnessValue()}\n";
         str += $"Total deaths = {cumulativeDeathCount[^1]}\n";
         

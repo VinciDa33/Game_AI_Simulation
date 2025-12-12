@@ -12,7 +12,7 @@ public class VaccinePolicy : Policy
     public override void Step()
     {
         if (isEnabled)
-            world.happiness -= 2;
+            world.worldState.happiness -= 2;
     }
 
     public override void EnablePolicy()

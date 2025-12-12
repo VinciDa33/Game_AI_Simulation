@@ -13,7 +13,7 @@ public class MaskPolicy : Policy
     {
         //Slight unhappiness with wearing masks
         if (isEnabled)
-            world.happiness -= 2;
+            world.worldState.happiness -= 2;
     }
 
     public override void EnablePolicy()
@@ -21,7 +21,7 @@ public class MaskPolicy : Policy
         if (isEnabled)
             return;
 
-        world.happiness -= 10;
+        world.worldState.happiness -= 10;
         
         world.worldParameters.infectionChancePerHour *= 0.5f;
         isEnabled = true;
@@ -32,7 +32,7 @@ public class MaskPolicy : Policy
         if (!isEnabled)
             return;
 
-        world.happiness += 6;
+        world.worldState.happiness += 6;
         
         world.worldParameters.infectionChancePerHour /= 0.5f;
         isEnabled = false;

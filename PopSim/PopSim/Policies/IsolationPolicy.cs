@@ -19,7 +19,7 @@ public class IsolationPolicy : Policy
         if (isEnabled)
             return;
 
-        world.happiness -= 5;
+        world.worldState.happiness -= 5;
 
         isEnabled = true;
     }
@@ -29,7 +29,7 @@ public class IsolationPolicy : Policy
         if (!isEnabled)
             return;
 
-        world.happiness += 3;
+        world.worldState.happiness += 3;
         
         isEnabled = false;
     }

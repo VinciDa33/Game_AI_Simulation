@@ -12,7 +12,7 @@ public class TLockdownPolicy : Policy
     public override void Step()
     {
         if (isEnabled)
-            world.happiness -= 10;
+            world.worldState.happiness -= 10;
     }
 
     public override void EnablePolicy()

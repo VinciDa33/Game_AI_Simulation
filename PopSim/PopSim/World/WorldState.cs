@@ -2,7 +2,7 @@
 
 namespace PopSim.World;
 
-public class WorldStats
+public class WorldState
 {
     private SimWorld world;
     public int deathCount { get; private set; } = 0;
@@ -10,16 +10,15 @@ public class WorldStats
     public int infectedCount { get; private set; } = 0;
     public int healthyCount { get; private set; } = 0;
     public int recovered { get; private set; } = 0;
-    public int hospitalized { get; private set; } = 0;
-    public int happiness { get; private set; } = 0;
-
-    public WorldStats(SimWorld world)
+    public int happiness;
+    
+    public WorldState(SimWorld world)
     {
         this.world = world;
         healthyCount = world.population.Count;
     }
     
-    public void UpdateStats()
+    public void UpdateState()
     {
         List<Person> population = world.population;
 
@@ -28,7 +27,6 @@ public class WorldStats
         infectedCount = 0;
         healthyCount = 0;
         recovered = 0;
-        hospitalized = 0;
         
         
         foreach (Person p in population)

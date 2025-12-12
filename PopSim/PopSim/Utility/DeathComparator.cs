@@ -2,12 +2,14 @@
 
 namespace PopSim.Utility;
 
-public class DeathComparator : Comparer<GeneticAgent> {
-    public override int Compare(GeneticAgent a, GeneticAgent b)
+public class DeathComparator : Comparer<Agent> {
+    public override int Compare(Agent a, Agent b)
     {
-        if (a.cumulativeDeathCount[^1] == b.cumulativeDeathCount[^1])
+        if (a.GetFitnessDeathCount() == b.GetFitnessDeathCount())
             return 0;
-        if (a.cumulativeDeathCount[^1] < b.cumulativeDeathCount[^1])
+        
+        //Remember we are minimizing death count!
+        if (a.GetFitnessDeathCount() < b.GetFitnessDeathCount())
             return 1;
         return -1;
     }

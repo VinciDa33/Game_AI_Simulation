@@ -2,11 +2,19 @@
 
 namespace PopSim.Utility;
 
-public class CrowdingComparator : Comparer<GeneticAgent> {
-    public override int Compare(GeneticAgent a, GeneticAgent b) {
-        if (a.crowdingDistance==b.crowdingDistance) 
+public class CrowdingComparator : Comparer<Agent>
+{
+    private Dictionary<Agent, double> crowdingDistances;
+    
+    public CrowdingComparator(Dictionary<Agent, double> crowdingDistances)
+    {
+        this.crowdingDistances = crowdingDistances;
+    }
+    
+    public override int Compare(Agent a, Agent b) {
+        if (crowdingDistances[a] == crowdingDistances[b]) 
             return 0;
-        if (a.crowdingDistance > b.crowdingDistance)
+        if (crowdingDistances[a]  > crowdingDistances[b])
             return 1;
         return -1;
     }

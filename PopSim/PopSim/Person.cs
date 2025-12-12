@@ -54,7 +54,7 @@ public class Person
             {
                 healthState = HealthState.SYMPTOMATIC;
                 healthStateChangeTimeStep = timeStep;
-                world.happiness -= 2;
+                world.worldState.happiness -= 2;
             }
         }
         
@@ -65,7 +65,7 @@ public class Person
                 healthState = HealthState.RECOVERED;
                 resitance = 0.4f;
                 healthStateChangeTimeStep = timeStep;
-                world.happiness += 2;
+                world.worldState.happiness += 2;
                 return;
             }
             
@@ -75,7 +75,7 @@ public class Person
                 {
                     healthState = HealthState.DEAD; 
                     healthStateChangeTimeStep = timeStep;
-                    world.happiness -= 5;
+                    world.worldState.happiness -= 5;
                 }
             }
         }

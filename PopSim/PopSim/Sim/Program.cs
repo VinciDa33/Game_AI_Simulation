@@ -1,7 +1,6 @@
 ﻿using PopSim.Genetic_Algorithm;
-using PopSim.Sim;
 
-namespace PopSim;
+namespace PopSim.Sim;
 
 class Program
 {
