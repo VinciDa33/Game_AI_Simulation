@@ -107,21 +107,24 @@ public class EvolutionManager
         Console.WriteLine("- Generating offspring\n");
         
         List<Agent> offspringPool = [];
-        
-        for (int i = 0; i < generationSize; i++)
+
+        while (offspringPool.Count < generationSize)
         {
             //Pick two random parents
             Agent parentA = parents[RandomManager.Instance.GetNextInt(parents.Count)];
             Agent parentB = parents[RandomManager.Instance.GetNextInt(parents.Count)];
             
-            //Generate a new offspring using crossover
-            Agent offspring = parentA.Crossover(parentB, generation, i);
+            //Generate new offspring using crossover
+            Agent[] offspring = parentA.Crossover(parentB, generation, offspringPool.Count);
+
+            foreach (Agent offspringAgent in offspring)
+            {
+                //Mutate the child
+                offspringAgent.Mutate();
             
-            //Mutate the child
-            offspring.Mutate();
-            
-            //Add it to the offspring pool
-            offspringPool.Add(offspring);
+                //Add it to the offspring pool
+                offspringPool.Add(offspringAgent);
+            }
         }
 
         return offspringPool;

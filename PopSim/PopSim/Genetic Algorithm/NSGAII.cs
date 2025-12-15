@@ -1,4 +1,5 @@
-﻿using PopSim.Utility;
+﻿using PopSim.Sorting;
+using PopSim.Utility;
 
 namespace PopSim.Genetic_Algorithm;
 

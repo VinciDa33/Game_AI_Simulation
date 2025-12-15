@@ -30,7 +30,10 @@ public abstract class Agent
         for (int i = 0; i < AlgorithmParameters.Instance.simDuration; i++)
         {
             world.Step(i);
-            EnactPolicies(i);
+            
+            //Only enact policies once per day!
+            if (i % 24 == 0)
+                EnactPolicies(i);
         }
                 
         Console.WriteLine($"> Thread G{generation}A{agentId} finished");
@@ -49,6 +52,6 @@ public abstract class Agent
     }
 
     protected abstract void EnactPolicies(int timeStep);
-    public abstract Agent Crossover(Agent mate, int generation, int newAgentId);
+    public abstract Agent[] Crossover(Agent mate, int newGeneration, int newAgentId);
     public abstract void Mutate(int maxMutations = 2, double mutationChance = 0.5d);
 }

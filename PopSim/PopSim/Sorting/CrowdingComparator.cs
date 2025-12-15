@@ -1,6 +1,6 @@
 ﻿using PopSim.Genetic_Algorithm;
 
-namespace PopSim.Utility;
+namespace PopSim.Sorting;
 
 public class CrowdingComparator : Comparer<Agent>
 {

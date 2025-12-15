@@ -39,11 +39,7 @@ public class Iteration3Agent : Agent
     
     protected override void EnactPolicies(int timeStep)
     {
-        //The agent can only enact a policy every 24 hours
-        if (timeStep%24 != 0) 
-            return;
-        
-        //We know we can do a clean integer division by 24
+        //We know we can do a clean integer division by 24 (See where EnactPolicies is called in Agent)
         int currentDay = timeStep / 24;
         
         //If the genome does not contain a key for the current day, skip
@@ -61,13 +57,13 @@ public class Iteration3Agent : Agent
         }
     }
 
-    public override Agent Crossover(Agent mate, int newGeneration, int newAgentId)
+    public override Agent[] Crossover(Agent mate, int newGeneration, int newAgentId)
     {
         //If this triggers you have made a mistake
-        if (!(mate is Iteration3Agent))
+        if (mate is not Iteration3Agent)
         {
             Console.WriteLine("You have made a mistake...");
-            return new Iteration3Agent(-1, -1);
+            return [new Iteration3Agent(-1, -1)];
         }
 
         Dictionary<int, bool[]> newGenome = new Dictionary<int, bool[]>();
@@ -93,7 +89,7 @@ public class Iteration3Agent : Agent
         //TODO: There is a real chance that agents will loose genome size over time, due to random chance, and the choice
         //TODO: of using the smallest genome parent, as the basis for crossover
 
-        return new Iteration3Agent(newGenome, newGeneration, newAgentId);
+        return [new Iteration3Agent(newGenome, newGeneration, newAgentId)];
     }
 
     public override void Mutate(int maxMutations = 2, double mutationChance = 0.5)
