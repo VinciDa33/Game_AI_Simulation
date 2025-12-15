@@ -1,6 +1,6 @@
 ﻿using PopSim.Utility;
 
-namespace PopSim.Genetic_Algorithm;
+namespace PopSim.Genetic_Algorithm.Iteration_3;
 
 public class Iteration3Agent : Agent
 {

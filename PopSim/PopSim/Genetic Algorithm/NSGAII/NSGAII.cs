@@ -1,7 +1,7 @@
 ﻿using PopSim.Sorting;
 using PopSim.Utility;
 
-namespace PopSim.Genetic_Algorithm;
+namespace PopSim.Genetic_Algorithm.NSGAII;
 
 public static class NSGAII
 {

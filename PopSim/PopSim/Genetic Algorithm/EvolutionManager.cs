@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using PopSim.Genetic_Algorithm.Iteration_3;
+using PopSim.Genetic_Algorithm.NSGAII;
 using PopSim.Sim;
 using PopSim.Utility;
 using PopSim.World;
@@ -27,10 +29,10 @@ public class EvolutionManager
         for (int i = 0; i < generationCap; i++)
         {
             //2. Fast Non-Dominated Sorting into Pareto fronts
-            ParetoFronts paretoFronts = NSGAII.GenerateParetoFronts(population);
+            ParetoFronts paretoFronts = NSGAII.NSGAII.GenerateParetoFronts(population);
         
             //3. Calculate crowding distances
-            Dictionary<Agent, double> crowdingDistances = NSGAII.CrowdingAllFronts(paretoFronts);
+            Dictionary<Agent, double> crowdingDistances = NSGAII.NSGAII.CrowdingAllFronts(paretoFronts);
             
             //4. Select agents to use for offspring creation using tournament selection
             List<Agent> matingPool = GenerateMatingPool(population, paretoFronts, crowdingDistances);
@@ -48,13 +50,13 @@ public class EvolutionManager
             combined.AddRange(offspring);
 
             //7. Fast Non-Dominated Sorting into Pareto fronts
-            ParetoFronts newFronts = NSGAII.GenerateParetoFronts(combined);
+            ParetoFronts newFronts = NSGAII.NSGAII.GenerateParetoFronts(combined);
 
             //Recalculate crowding distance for the new set of combined agents
-            Dictionary<Agent, double> newCrowdingDistance = NSGAII.CrowdingAllFronts(newFronts);
+            Dictionary<Agent, double> newCrowdingDistance = NSGAII.NSGAII.CrowdingAllFronts(newFronts);
 
             //8. Create a new population using deterministic truncation
-            List<Agent> newPopulation = NSGAII.DeterministicTruncation(newFronts, newCrowdingDistance, generationSize);
+            List<Agent> newPopulation = NSGAII.NSGAII.DeterministicTruncation(newFronts, newCrowdingDistance, generationSize);
             
             population = newPopulation;
             
@@ -136,7 +138,7 @@ public class EvolutionManager
         
         List<Agent> matingPool = [];
         for (int i = 0; i < generationSize; i++)
-            matingPool.Add(NSGAII.TournamentSelection(agents, paretoFronts, crowdingDistances));
+            matingPool.Add(NSGAII.NSGAII.TournamentSelection(agents, paretoFronts, crowdingDistances));
 
         return matingPool;
     }

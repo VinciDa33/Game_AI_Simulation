@@ -1,4 +1,4 @@
-﻿namespace PopSim.Genetic_Algorithm;
+﻿namespace PopSim.Genetic_Algorithm.NSGAII;
 
 public class ParetoSubject
 {
