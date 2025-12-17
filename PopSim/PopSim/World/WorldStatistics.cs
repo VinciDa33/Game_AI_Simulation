@@ -5,18 +5,25 @@ namespace PopSim.World;
 public class WorldStatistics
 {
     private SimWorld world;
+    private bool extensiveLogging;
     
     public int[] cumulativeDeathCount;
     public int[] happinessOverTime;
+    
+    //Extensive data
     public int[] deathRateOverTime;
 
-    public WorldStatistics(SimWorld world)
+    
+    
+    public WorldStatistics(SimWorld world, bool extensiveLogging)
     {
         this.world = world;
         cumulativeDeathCount = new int[AlgorithmParameters.Instance.simDuration];
         happinessOverTime = new int[AlgorithmParameters.Instance.simDuration];
+        
         deathRateOverTime = new int[AlgorithmParameters.Instance.simDuration];
 
+        this.extensiveLogging = extensiveLogging;
     }
     
     public void Update(int timestep)

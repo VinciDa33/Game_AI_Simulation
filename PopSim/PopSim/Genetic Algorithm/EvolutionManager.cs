@@ -1,10 +1,7 @@
 ﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using PopSim.Genetic_Algorithm.Iteration_3;
-using PopSim.Genetic_Algorithm.NSGAII;
-using PopSim.Sim;
+using PopSim.Genetic_Algorithm.NSGA2;
 using PopSim.Utility;
-using PopSim.World;
 
 namespace PopSim.Genetic_Algorithm;
 
@@ -16,6 +13,7 @@ public class EvolutionManager
     
     public void Start()
     {
+        LogManager logger = new LogManager();
         Console.WriteLine("- Starting Evolution Manager!");
         
         //1. Initial population
@@ -29,10 +27,10 @@ public class EvolutionManager
         for (int i = 0; i < generationCap; i++)
         {
             //2. Fast Non-Dominated Sorting into Pareto fronts
-            ParetoFronts paretoFronts = NSGAII.NSGAII.GenerateParetoFronts(population);
+            ParetoFronts paretoFronts = NSGAII.GenerateParetoFronts(population);
         
             //3. Calculate crowding distances
-            Dictionary<Agent, double> crowdingDistances = NSGAII.NSGAII.CrowdingAllFronts(paretoFronts);
+            Dictionary<Agent, double> crowdingDistances = NSGAII.CrowdingAllFronts(paretoFronts);
             
             //4. Select agents to use for offspring creation using tournament selection
             List<Agent> matingPool = GenerateMatingPool(population, paretoFronts, crowdingDistances);
@@ -50,22 +48,26 @@ public class EvolutionManager
             combined.AddRange(offspring);
 
             //7. Fast Non-Dominated Sorting into Pareto fronts
-            ParetoFronts newFronts = NSGAII.NSGAII.GenerateParetoFronts(combined);
+            ParetoFronts newFronts = NSGAII.GenerateParetoFronts(combined);
 
             //Recalculate crowding distance for the new set of combined agents
-            Dictionary<Agent, double> newCrowdingDistance = NSGAII.NSGAII.CrowdingAllFronts(newFronts);
+            Dictionary<Agent, double> newCrowdingDistance = NSGAII.CrowdingAllFronts(newFronts);
 
             //8. Create a new population using deterministic truncation
-            List<Agent> newPopulation = NSGAII.NSGAII.DeterministicTruncation(newFronts, newCrowdingDistance, generationSize);
+            List<Agent> newPopulation = NSGAII.DeterministicTruncation(newFronts, newCrowdingDistance, generationSize);
             
             population = newPopulation;
             
-            //Log one of the best current candidates. Since deterministic truncation adds the best front first, population[0] will be at least part of the best front
-            LogManager.Instance.dataToLog.Add(population[0].ToString());
             Console.WriteLine("-- Generation " + i + " finished --");
+            
+            //Log the entire best front
+            logger.dataToLog.Add($"GENERATION {i}");
+            foreach (Agent agent in newFronts.fronts[0])
+                logger.dataToLog.Add(agent.ToString());
+            
+            //Log after every generation!
+            logger.Log("GenerationLog.txt");
         }
-        
-        LogManager.Instance.Log();
     }
 
     private void RunSimulations(List<Agent> agents)
@@ -138,7 +140,7 @@ public class EvolutionManager
         
         List<Agent> matingPool = [];
         for (int i = 0; i < generationSize; i++)
-            matingPool.Add(NSGAII.NSGAII.TournamentSelection(agents, paretoFronts, crowdingDistances));
+            matingPool.Add(NSGA2.NSGAII.TournamentSelection(agents, paretoFronts, crowdingDistances));
 
         return matingPool;
     }

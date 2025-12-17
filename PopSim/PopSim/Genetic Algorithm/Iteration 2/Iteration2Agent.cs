@@ -7,12 +7,12 @@ public class Iteration2Agent : Agent
     //A set of chance modifiers at different time steps for enabling or disabling policies
     public float[] genome;
     
-    public Iteration2Agent(int generation, int id) : base(generation, id)
+    public Iteration2Agent(int generation, int id, bool extensiveLogging = false) : base(generation, id, extensiveLogging)
     {
         GenerateGenome();
     }
     
-    public Iteration2Agent(float[] genome, int generation, int id) : base(generation, id)
+    public Iteration2Agent(float[] genome, int generation, int id, bool extensiveLogging = false) : base(generation, id, extensiveLogging)
     {
         this.genome = genome;
     }

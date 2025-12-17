@@ -5,7 +5,7 @@ namespace PopSim.World;
 
 public class SimWorld
 {
-    public List<Person> population { get; private set; } = new List<Person>();
+    public List<Person> population { get; private set; } = [];
 
     public int day { get; private set; } = 0;
     public int hour { get; private set; } = 0;
@@ -14,11 +14,11 @@ public class SimWorld
     public WorldState worldState { get; private set; }
     public WorldStatistics worldStatistics { get; private set; }
     public WorldParameters worldParameters { get; private set; }
-    public PolicyManager policyManager { get; private set; } 
-    public SimWorld()
+    public PolicyManager policyManager { get; private set; }
+    public SimWorld(bool extensiveLogging)
     {
         worldState = new WorldState(this);
-        worldStatistics = new WorldStatistics(this);
+        worldStatistics = new WorldStatistics(this, extensiveLogging);
         worldParameters = new WorldParameters();
         policyManager = new PolicyManager(this);
     }

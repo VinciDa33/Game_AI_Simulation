@@ -7,12 +7,12 @@ public class Iteration3Agent : Agent
     public Dictionary<int, bool[]> genome =  new Dictionary<int, bool[]>();
     private int genomeSize = 24;
     
-    public Iteration3Agent(int generation, int id) : base(generation, id)
+    public Iteration3Agent(int generation, int id, bool extensiveLogging = false) : base(generation, id, extensiveLogging)
     {
         GenerateGenome();
     }
     
-    public Iteration3Agent(Dictionary<int, bool[]> genome, int generation, int id) : base(generation, id)
+    public Iteration3Agent(Dictionary<int, bool[]> genome, int generation, int id, bool extensiveLogging = false) : base(generation, id, extensiveLogging)
     {
         this.genome = genome;
     }
@@ -85,9 +85,13 @@ public class Iteration3Agent : Agent
             else
                 newGenome.TryAdd(mateGenomeKeys[i], mateIt3.genome[mateGenomeKeys[i]]);
         }
-        
-        //TODO: There is a real chance that agents will loose genome size over time, due to random chance, and the choice
-        //TODO: of using the smallest genome parent, as the basis for crossover
+
+        //Ensure genome size does not decrease!
+        while (newGenome.Count < genomeSize)
+        {
+            GenerateDay(out int day, out bool[] policies);
+            newGenome.TryAdd(day, policies);
+        }
 
         return [new Iteration3Agent(newGenome, newGeneration, newAgentId)];
     }

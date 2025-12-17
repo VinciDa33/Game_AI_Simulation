@@ -10,9 +10,9 @@ public abstract class Agent
     
     //The simulation world this agent will work on
     protected SimWorld world;
-    
+    protected bool extensiveLogging;
 
-    public Agent(int generation, int id)
+    public Agent(int generation, int id, bool extensiveLogging = false)
     {
         this.generation = generation;
         this.agentId = id;
@@ -23,7 +23,7 @@ public abstract class Agent
         Console.WriteLine($"> Thread G{generation}A{agentId} starting");
         
         //Initialize a new simulation world
-        world = new SimWorld();
+        world = new SimWorld(extensiveLogging);
         world.InitWorld();
 
         //Run simulation

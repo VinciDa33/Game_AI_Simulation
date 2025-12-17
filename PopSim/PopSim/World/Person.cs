@@ -11,10 +11,10 @@ public class Person
     public SocialState socialState { get; private set; }  = SocialState.HOME;
     private int healthStateChangeTimeStep = 0;
     private float resitance = 0.0f;
-    
-    public List<Person> familyRealtions { get; private set; } = new List<Person>();
-    public List<Person> socialRelations { get; private set; } = new List<Person>();
-    public List<Person> workRelations { get; private set; } = new List<Person>();
+
+    public List<Person> familyRealtions { get; private set; } = [];
+    public List<Person> socialRelations { get; private set; } = [];
+    public List<Person> workRelations { get; private set; } = [];
 
     public void Step(SimWorld world, int timeStep)
     {

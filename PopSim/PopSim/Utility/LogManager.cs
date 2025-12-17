@@ -4,21 +4,9 @@ namespace PopSim;
 
 public class LogManager
 {
-    private static LogManager? instance;
+    public List<string> dataToLog = [];
     
-    public static LogManager Instance
-    {
-        get
-        {
-            if (instance == null)
-                instance = new LogManager();
-            return instance;
-        }
-    }
-    
-    public List<string> dataToLog = new List<string>();
-    
-    public void Log()
+    public void Log(string filename)
     {
         Console.WriteLine("Writing Logs!");
         TextWriter? tw = null;

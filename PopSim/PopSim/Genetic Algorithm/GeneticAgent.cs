@@ -46,12 +46,12 @@ public class GeneticAgent
         this.genome = genome;
         this.generation = generation;
         this.agentId = agentId;
-        world = new SimWorld();
+        world = new SimWorld(false);
     }
     
     public void Start()
     {
-        world = new SimWorld();
+        world = new SimWorld(false);
         world.InitWorld();
 
         //Run simulation

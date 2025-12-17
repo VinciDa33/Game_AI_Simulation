@@ -5,7 +5,7 @@ namespace PopSim.Sim;
 
 public class SimManager
 {
-    public SimWorld world = new SimWorld();
+    public SimWorld world = new SimWorld(false);
     public int timeStep = 0;
 
     public void Start()

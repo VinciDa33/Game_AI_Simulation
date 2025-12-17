@@ -9,12 +9,12 @@ public class Iteration1Agent : Agent
     //Genome of single policy states
     public List<bool> genome = new List<bool>();
     
-    public Iteration1Agent(int generation, int id) : base(generation, id)
+    public Iteration1Agent(int generation, int id, bool extensiveLogging = false) : base(generation, id, extensiveLogging)
     {
         GenerateGenome();
     }
     
-    public Iteration1Agent(List<bool> genome, int generation, int id) : base(generation, id)
+    public Iteration1Agent(List<bool> genome, int generation, int id, bool extensiveLogging = false) : base(generation, id, extensiveLogging)
     {
         this.genome = genome;
     }
@@ -53,22 +53,19 @@ public class Iteration1Agent : Agent
         
         //Cast the other agent
         Iteration1Agent mateIt1 = (Iteration1Agent) mate;
-        
-        //Get a random pivot
-        int p = RandomManager.Instance.GetNextInt(1, genome.Count - 1);
-        
-        //Generate offpsring A's genome from the parents
-        List<bool> offspringAGenome = [];
-        offspringAGenome.AddRange(genome.GetRange(0,p));
-        offspringAGenome.AddRange(mateIt1.genome.GetRange(p, genome.Count - p));
 
-        //Generate offpsring B's genome from the parents
-        List<bool> offspringBGenome = [];
-        offspringBGenome.AddRange(mateIt1.genome.GetRange(0,p));
-        offspringBGenome.AddRange(genome.GetRange(p, mateIt1.genome.Count - p));
+        List<bool> newGenome = [];
         
-        //Return 2 new agents
-        return [new Iteration1Agent(offspringAGenome, newGeneration, newAgentId), new Iteration1Agent(offspringBGenome, newGeneration, newAgentId + 1)];
+        //Pick random values from parent genomes
+        for (int i = 0; i < genome.Count; i++)
+        {
+            if (RandomManager.Instance.GetNextInt(2) == 0)
+                newGenome.Add(genome[i]);
+            else
+                newGenome.Add(mateIt1.genome[i]);
+        }
+
+        return [new Iteration1Agent(newGenome, newGeneration, newAgentId)];
     }
 
     public override void Mutate(int maxMutations = 2, double mutationChance = 0.5)

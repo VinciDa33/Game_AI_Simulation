@@ -1,4 +1,4 @@
-﻿namespace PopSim.Genetic_Algorithm.NSGAII;
+﻿namespace PopSim.Genetic_Algorithm.NSGA2;
 
 public class ParetoFronts
 {
