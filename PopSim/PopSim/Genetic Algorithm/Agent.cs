@@ -48,12 +48,17 @@ public abstract class Agent
     
     public long GetFitnessHappiness()
     {
-        List<long> happinessDivided = [];
-        for (int i = 0; i < world.worldStatistics.happinessOverTime.Length; i++)
-            happinessDivided[i] = (long) Math.Floor(world.worldStatistics.happinessOverTime[i] / (double) world.worldStatistics.happinessOverTime.Length);
-        
         //Return the average happiness over the course of the simulation. Floored to nearest integer
-        return happinessDivided.Sum();
+        try
+        {
+            return (long)Math.Floor(world.worldStatistics.happinessOverTime.Sum() /
+                                    (double)world.worldStatistics.happinessOverTime.Length);
+        }
+        catch (OverflowException oe)
+        {
+            Console.WriteLine("An overflow exception was caught");
+            return int.MinValue;
+        }
     }
 
     protected abstract void EnactPolicies(int timeStep);
