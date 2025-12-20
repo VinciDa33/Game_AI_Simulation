@@ -51,9 +51,9 @@ public class Iteration3Agent : Agent
         {
             //Enable or disable policies based on the genome values
             if (genome[currentDay][i])
-                world.policyManager.policies[i].EnablePolicy();
+                world.policyManager.policies[i].EnablePolicy(timeStep);
             else
-                world.policyManager.policies[i].DisablePolicy();
+                world.policyManager.policies[i].DisablePolicy(timeStep);
         }
     }
 

@@ -9,13 +9,14 @@ public abstract class Agent
     public int agentId { get; private set; }
     
     //The simulation world this agent will work on
-    protected SimWorld world;
-    protected bool extensiveLogging;
+    public SimWorld world;
+    public bool extensiveLogging;
 
     public Agent(int generation, int id, bool extensiveLogging = false)
     {
         this.generation = generation;
         this.agentId = id;
+        this.extensiveLogging = extensiveLogging;
     }
 
     public void Run()
@@ -48,7 +49,7 @@ public abstract class Agent
     public int GetFitnessHappiness()
     {
         //Return the average happiness over the course of the simulation. Floored to nearest integer
-        return (int) Math.Floor(world.worldStatistics.happinessOverTime.Sum() / (float)world.worldStatistics.happinessOverTime.Length);
+        return (int) Math.Floor(world.worldStatistics.happinessOverTime.Sum() / (double)world.worldStatistics.happinessOverTime.Length);
     }
 
     protected abstract void EnactPolicies(int timeStep);

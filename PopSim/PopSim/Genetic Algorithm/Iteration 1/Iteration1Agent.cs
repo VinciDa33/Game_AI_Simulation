@@ -36,9 +36,9 @@ public class Iteration1Agent : Agent
         for (int i = 0; i < world.policyManager.policies.Length; i++)
         {
             if (genome[i])
-                world.policyManager.policies[i].EnablePolicy();
+                world.policyManager.policies[i].EnablePolicy(timeStep);
             else
-                world.policyManager.policies[i].DisablePolicy();
+                world.policyManager.policies[i].DisablePolicy(timeStep);
         }
     }
 

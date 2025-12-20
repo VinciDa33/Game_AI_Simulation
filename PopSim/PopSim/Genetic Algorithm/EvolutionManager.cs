@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualBasic;
+using PopSim.Genetic_Algorithm.Iteration_1;
+using PopSim.Genetic_Algorithm.Iteration_2;
 using PopSim.Genetic_Algorithm.Iteration_3;
 using PopSim.Genetic_Algorithm.NSGA2;
 using PopSim.Utility;
@@ -8,12 +10,27 @@ namespace PopSim.Genetic_Algorithm;
 public class EvolutionManager
 {
     private List<Agent> population = [];
-    private int generationSize = 15;
-    private int generationCap = 10;
+
+    private int generation;
+    private int generationSize;
+    private int generationCount;
+
+    public EvolutionManager(int generation = 3, int generationSize = 50, int generationCount = 50)
+    {
+        this.generation = generation;
+        this.generationSize = generationSize;
+        this.generationCount = generationCount;
+        
+        Console.WriteLine("Settings:");
+        Console.WriteLine("- Generation " + generation);
+        Console.WriteLine("- Generation size " + generationSize);
+        Console.WriteLine("- Generation count " + generationCount);
+    }
     
     public void Start()
     {
         LogManager logger = new LogManager();
+        List<Agent> bestAgents = [];
         Console.WriteLine("- Starting Evolution Manager!");
         
         //1. Initial population
@@ -24,7 +41,7 @@ public class EvolutionManager
         Console.WriteLine("- Simulating initial generation");
         RunSimulations(population);
 
-        for (int i = 0; i < generationCap; i++)
+        for (int i = 0; i < generationCount; i++)
         {
             //2. Fast Non-Dominated Sorting into Pareto fronts
             ParetoFronts paretoFronts = NSGAII.GenerateParetoFronts(population);
@@ -61,13 +78,41 @@ public class EvolutionManager
             Console.WriteLine("-- Generation " + i + " finished --");
             
             //Log the entire best front
-            logger.dataToLog.Add($"GENERATION {i}");
+            logger.dataToLog.Add($"\n<><><> GENERATION {i} <><><>");
             foreach (Agent agent in newFronts.fronts[0])
                 logger.dataToLog.Add(agent.ToString());
-            
-            //Log after every generation!
-            logger.Log("GenerationLog.txt");
+
+            //In the last generation, get the best agents for extensive logging
+            if (i == generationCount - 1)
+            {
+                if (newFronts.fronts[0].Count <= 3)
+                    bestAgents.AddRange(newFronts.fronts[0]);
+                else
+                {
+                    bestAgents.Add(newFronts.fronts[0][0]); //Get the best agent for one of the parameters
+                    bestAgents.Add(newFronts.fronts[0][^1]); //Get the best agent for the other parameter
+                    bestAgents.Add(newFronts.fronts[0][newFronts.fronts[0].Count / 2]); //Get a middle solution
+                }
+            }
         }
+        
+        //Log some of all generations
+        logger.Log("GenerationLog");
+        
+        Console.WriteLine("Running extensive logging!");
+        foreach (Agent agent in bestAgents)
+            agent.extensiveLogging = true;
+        
+        RunSimulations(bestAgents);
+
+        LogManager dataLogger = new LogManager();
+        foreach (Agent agent in bestAgents)
+        {
+            dataLogger.dataToLog.Add("\nG" + agent.generation + "I" + agent.agentId);
+            dataLogger.dataToLog.Add(agent.world.worldStatistics.ToString());
+            dataLogger.dataToLog.Add(agent.world.policyManager.ToString());
+        }
+        dataLogger.Log("DataLog");
     }
 
     private void RunSimulations(List<Agent> agents)
@@ -102,11 +147,19 @@ public class EvolutionManager
 
     private void GenerateInitialPopulation()
     {
+        population.Clear();
         for (int i = 0; i < generationSize; i++)
-            population.Add(new Iteration3Agent(0, i));
+        {
+            if (generation == 1)
+                population.Add(new Iteration1Agent(0, i));
+            else if (generation == 2)
+                population.Add(new Iteration2Agent(0, i));
+            else if (generation == 3)
+                population.Add(new Iteration3Agent(0, i));
+        }
     }
 
-    private List<Agent> GenerateOffspring(List<Agent> parents, int generation)
+    private List<Agent> GenerateOffspring(List<Agent> parents, int newGeneration)
     {
         Console.WriteLine("- Generating offspring\n");
         
@@ -119,7 +172,7 @@ public class EvolutionManager
             Agent parentB = parents[RandomManager.Instance.GetNextInt(parents.Count)];
             
             //Generate new offspring using crossover
-            Agent[] offspring = parentA.Crossover(parentB, generation, offspringPool.Count);
+            Agent[] offspring = parentA.Crossover(parentB, newGeneration, offspringPool.Count);
 
             foreach (Agent offspringAgent in offspring)
             {

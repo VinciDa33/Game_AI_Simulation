@@ -14,8 +14,6 @@ public class WorldParameters
     public float chanceOfRecoveryFromInfectionPerHour;
     public float chanceOfRecoveryFromSymptomaticPerHour;
     
-    public bool immuneWithAntibodies;
-    
     public WorldParameters()
     {
         infectionChancePerHour = SimParameters.Instance.infectionChancePerHour;
@@ -26,7 +24,5 @@ public class WorldParameters
 
         chanceOfRecoveryFromInfectionPerHour = SimParameters.Instance.chanceOfRecoveryFromInfectionPerHour;
         chanceOfRecoveryFromSymptomaticPerHour = SimParameters.Instance.chanceOfRecoveryFromSymptomaticPerHour;
-
-        immuneWithAntibodies = SimParameters.Instance.immuneWithAntibodies;
     }
 }

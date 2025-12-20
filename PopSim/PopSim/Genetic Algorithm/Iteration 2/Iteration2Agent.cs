@@ -45,9 +45,9 @@ public class Iteration2Agent : Agent
             
             //If the value is large, enable this policy. If it is low, disable it
             if (rand > 0.75d)
-                world.policyManager.policies[i].EnablePolicy();
+                world.policyManager.policies[i].EnablePolicy(timeStep);
             else if (rand < -0.75d)
-                world.policyManager.policies[i].DisablePolicy();
+                world.policyManager.policies[i].DisablePolicy(timeStep);
         }
     }
 

@@ -17,7 +17,6 @@ public class SimParameters
         }
     }
     
-    
     //Population
     public int populationSize = 14000;
     public IntRange rangeOfFamilyMembers = new IntRange(1, 5);
@@ -26,13 +25,13 @@ public class SimParameters
     
     //Population Behaviour
     public SocialState[] baseSchedule = [
-        SocialState.SLEEPING, //0.00 - 1.00
-        SocialState.SLEEPING, //1.00 - 2.00
-        SocialState.SLEEPING, //2.00 - 3.00
-        SocialState.SLEEPING, //3.00 - 4.00
-        SocialState.SLEEPING, //4.00 - 5.00
-        SocialState.SLEEPING, //5.00 - 6.00
-        SocialState.SLEEPING, //6.00 - 7.00
+        SocialState.HOME, //0.00 - 1.00
+        SocialState.HOME, //1.00 - 2.00
+        SocialState.HOME, //2.00 - 3.00
+        SocialState.HOME, //3.00 - 4.00
+        SocialState.HOME, //4.00 - 5.00
+        SocialState.HOME, //5.00 - 6.00
+        SocialState.HOME, //6.00 - 7.00
         SocialState.HOME, //7.00 - 8.00
         SocialState.WORK, //8.00 - 9.00
         SocialState.WORK, //9.00 - 10.00
@@ -44,25 +43,25 @@ public class SimParameters
         SocialState.SOCIAL, //15.00 - 16.00
         SocialState.SOCIAL, //16.00 - 17.00
         SocialState.SOCIAL, //17.00 - 18.00
-        SocialState.HOME, //18.00 - 19.00
+        SocialState.SOCIAL, //18.00 - 19.00
         SocialState.HOME, //19.00 - 20.00
         SocialState.HOME, //20.00 - 21.00
         SocialState.HOME, //21.00 - 22.00
         SocialState.HOME, //22.00 - 23.00
-        SocialState.SLEEPING, //23.00 - 24.00
+        SocialState.HOME, //23.00 - 24.00
     ];
     
     //Population Weekend Behaviour
     public SocialState[] baseWeekendSchedule = [
-        SocialState.SLEEPING, //0.00 - 1.00
-        SocialState.SLEEPING, //1.00 - 2.00
-        SocialState.SLEEPING, //2.00 - 3.00
-        SocialState.SLEEPING, //3.00 - 4.00
-        SocialState.SLEEPING, //4.00 - 5.00
-        SocialState.SLEEPING, //5.00 - 6.00
-        SocialState.SLEEPING, //6.00 - 7.00
-        SocialState.SLEEPING, //7.00 - 8.00
-        SocialState.SLEEPING, //8.00 - 9.00
+        SocialState.HOME, //0.00 - 1.00
+        SocialState.HOME, //1.00 - 2.00
+        SocialState.HOME, //2.00 - 3.00
+        SocialState.HOME, //3.00 - 4.00
+        SocialState.HOME, //4.00 - 5.00
+        SocialState.HOME, //5.00 - 6.00
+        SocialState.HOME, //6.00 - 7.00
+        SocialState.HOME, //7.00 - 8.00
+        SocialState.HOME, //8.00 - 9.00
         SocialState.SOCIAL, //9.00 - 10.00
         SocialState.SOCIAL, //10.00 - 11.00
         SocialState.SOCIAL, //11.00 - 12.00
@@ -77,18 +76,18 @@ public class SimParameters
         SocialState.HOME, //20.00 - 21.00
         SocialState.HOME, //21.00 - 22.00
         SocialState.HOME, //22.00 - 23.00
-        SocialState.SLEEPING, //23.00 - 24.00
+        SocialState.HOME, //23.00 - 24.00
     ];
     
     //Population remote work Behaviour
     public SocialState[] remoteSchedule = [
-        SocialState.SLEEPING, //0.00 - 1.00
-        SocialState.SLEEPING, //1.00 - 2.00
-        SocialState.SLEEPING, //2.00 - 3.00
-        SocialState.SLEEPING, //3.00 - 4.00
-        SocialState.SLEEPING, //4.00 - 5.00
-        SocialState.SLEEPING, //5.00 - 6.00
-        SocialState.SLEEPING, //6.00 - 7.00
+        SocialState.HOME, //0.00 - 1.00
+        SocialState.HOME, //1.00 - 2.00
+        SocialState.HOME, //2.00 - 3.00
+        SocialState.HOME, //3.00 - 4.00
+        SocialState.HOME, //4.00 - 5.00
+        SocialState.HOME, //5.00 - 6.00
+        SocialState.HOME, //6.00 - 7.00
         SocialState.HOME, //7.00 - 8.00
         SocialState.HOME, //8.00 - 9.00
         SocialState.HOME, //9.00 - 10.00
@@ -105,11 +104,9 @@ public class SimParameters
         SocialState.HOME, //20.00 - 21.00
         SocialState.HOME, //21.00 - 22.00
         SocialState.HOME, //22.00 - 23.00
-        SocialState.SLEEPING, //23.00 - 24.00
+        SocialState.HOME, //23.00 - 24.00
     ];
     
-    //Hospitals (NOT USED YET)
-    public  int maxHospitalCapacity = 150;
     
     //Infection
     public int numberOfInitialInfections = 50;
@@ -118,9 +115,11 @@ public class SimParameters
     public int meanTimeFromSymptomaticToDeadly = 168; //In hours
     public float chanceOfDeath = 0.0412f;
     
-
     public float chanceOfRecoveryFromInfectionPerHour = 0.04f; //4%
     public float chanceOfRecoveryFromSymptomaticPerHour = 0.025f; //2.5%
 
-    public bool immuneWithAntibodies = false;
+    public float chanceOfVaccinationPerHour = 0.005f; //0.5%. Only applies if the vaccine policy is enabled. 
+    public float resistanceGainFromRecovery = 0.5f;
+    public float resistanceGainFromVaccine = 0.85f;
+    public float resistanceDropOffPerHour = 0.99f; //Resistance is multiplied by this number every hour
 }

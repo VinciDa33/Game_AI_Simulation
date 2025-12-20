@@ -12,7 +12,8 @@ public class LogManager
         TextWriter? tw = null;
         try
         {
-            tw = new StreamWriter(File.Create("Log.txt"));
+            int fileCount = Directory.GetFiles(".").Length;
+            tw = new StreamWriter(File.Create(filename + "_" + fileCount + ".txt"));
             foreach (string data in dataToLog)
             {
                 tw.WriteLine(data);

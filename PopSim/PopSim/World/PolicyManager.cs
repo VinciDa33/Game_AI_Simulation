@@ -5,19 +5,20 @@ namespace PopSim.World;
 public class PolicyManager
 {
     public Policy[] policies { get; private set; }
+    public List<string> policyChoices = [];
     
     public PolicyManager(SimWorld world)
     {
         policies = new Policy[]
         {
-            new AwarenessPolicy("Awareness", world),
-            new SanitisePolicy("Sanitise", world),
-            new MaskPolicy("Mask", world),
-            new RemotePolicy("Remote", world),
-            new IsolationPolicy("Isolation", world),
-            new SLockdownPolicy("Soft_Lockdown", world),
-            new TLockdownPolicy("Total_Lockdown", world),
-            new VaccinePolicy("Vaccine", world)
+            new AwarenessPolicy("Awareness", world, this),
+            new SanitisePolicy("Sanitise", world, this),
+            new MaskPolicy("Mask", world, this),
+            new RemotePolicy("Remote", world, this),
+            new IsolationPolicy("Isolation", world, this),
+            new SLockdownPolicy("Soft_Lockdown", world, this),
+            new TLockdownPolicy("Total_Lockdown", world, this),
+            new VaccinePolicy("Vaccine", world, this)
         };
     }
 
@@ -38,5 +39,10 @@ public class PolicyManager
         }
 
         return null;
+    }
+
+    public override string ToString()
+    {
+        return "Policy Choices [" + string.Join(", ", policyChoices) + "]";
     }
 }

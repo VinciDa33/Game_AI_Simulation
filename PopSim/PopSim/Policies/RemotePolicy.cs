@@ -4,7 +4,7 @@ namespace PopSim.Policies;
 
 public class RemotePolicy : Policy
 {
-    public RemotePolicy(string name, SimWorld world) : base(name, world)
+    public RemotePolicy(string name, SimWorld world, PolicyManager manager) : base(name, world, manager)
     {
         
     }
@@ -15,19 +15,21 @@ public class RemotePolicy : Policy
         //Should perhaps have a slight happiness deduction
     }
 
-    public override void EnablePolicy()
+    public override void EnablePolicy(int step)
     {
         if (isEnabled)
             return;
 
         isEnabled = true;
+        manager.policyChoices.Add($"[{step}: enabled {name}]");
     }
 
-    public override void DisablePolicy()
+    public override void DisablePolicy(int step)
     {
         if (!isEnabled)
             return;
 
         isEnabled = false;
+        manager.policyChoices.Add($"[{step}: disabled {name}]");
     }
 }
