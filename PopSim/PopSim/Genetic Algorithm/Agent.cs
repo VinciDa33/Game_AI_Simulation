@@ -46,10 +46,14 @@ public abstract class Agent
         return world.worldStatistics.cumulativeDeathCount[^1];
     }
     
-    public int GetFitnessHappiness()
+    public long GetFitnessHappiness()
     {
+        List<long> happinessDivided = [];
+        for (int i = 0; i < world.worldStatistics.happinessOverTime.Length; i++)
+            happinessDivided[i] = (long) Math.Floor(world.worldStatistics.happinessOverTime[i] / (double) world.worldStatistics.happinessOverTime.Length);
+        
         //Return the average happiness over the course of the simulation. Floored to nearest integer
-        return (int) Math.Floor(world.worldStatistics.happinessOverTime.Sum() / (double)world.worldStatistics.happinessOverTime.Length);
+        return happinessDivided.Sum();
     }
 
     protected abstract void EnactPolicies(int timeStep);

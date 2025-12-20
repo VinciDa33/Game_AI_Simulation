@@ -10,7 +10,7 @@ public class WorldState
     public int infectedCount { get; private set; } = 0;
     public int healthyCount { get; private set; } = 0;
     public int recovered { get; private set; } = 0;
-    public int happiness;
+    public long happiness;
     
     public WorldState(SimWorld world)
     {

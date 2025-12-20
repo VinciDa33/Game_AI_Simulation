@@ -9,7 +9,7 @@ public class WorldStatistics
     private bool extensiveLogging;
     
     public int[] cumulativeDeathCount;
-    public int[] happinessOverTime;
+    public long[] happinessOverTime;
     
     //Extensive data
     public int[] deathRateOverTime;
@@ -25,7 +25,7 @@ public class WorldStatistics
     {
         this.world = world;
         cumulativeDeathCount = new int[AlgorithmParameters.Instance.simDuration];
-        happinessOverTime = new int[AlgorithmParameters.Instance.simDuration];
+        happinessOverTime = new long[AlgorithmParameters.Instance.simDuration];
         
         deathRateOverTime = new int[AlgorithmParameters.Instance.simDuration];
         deathRateOverTime[0] = 0;
