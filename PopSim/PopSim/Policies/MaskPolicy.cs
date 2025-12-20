@@ -33,7 +33,7 @@ public class MaskPolicy : Policy
         if (!isEnabled)
             return;
 
-        world.worldState.happiness += (int) Math.Floor(world.population.Count * 0.22f); //In a population of 1000, the starting happiness will be 5000, and this number will be 200
+        world.worldState.happiness += (int) Math.Floor(world.population.Count * 0.20f); //In a population of 1000, the starting happiness will be 5000, and this number will be 200
         
         world.worldParameters.infectionChancePerHour /= 0.5f;
         isEnabled = false;

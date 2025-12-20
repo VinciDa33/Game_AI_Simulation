@@ -56,7 +56,7 @@ public class Person
             {
                 healthState = HealthState.SYMPTOMATIC;
                 healthStateChangeTimeStep = timeStep;
-                world.worldState.happiness -= 3;
+                world.worldState.happiness -= 50;
             }
         }
         
@@ -65,22 +65,19 @@ public class Person
             //Recovery from symptomatic
             if (RandomManager.Instance.GetNextDouble() < world.worldParameters.chanceOfRecoveryFromSymptomaticPerHour)
             {
-                healthState = HealthState.RECOVERED;
-                resitance = SimParameters.Instance.resistanceGainFromRecovery;
-                healthStateChangeTimeStep = timeStep;
-                world.worldState.happiness += 2;
-                return;
-            }
-            
-            //Change from symptomatic to dead
-            if (timeStep >= healthStateChangeTimeStep + world.worldParameters.meanTimeFromSymptomaticToDeadly)
-            {
                 if (RandomManager.Instance.GetNextDouble() < world.worldParameters.chanceOfDeath)
                 {
                     healthState = HealthState.DEAD; 
                     healthStateChangeTimeStep = timeStep;
-                    world.worldState.happiness -= 10;
+                    world.worldState.happiness -= 150;
+                    return;
                 }
+                
+                healthState = HealthState.RECOVERED;
+                resitance = SimParameters.Instance.resistanceGainFromRecovery;
+                healthStateChangeTimeStep = timeStep;
+                world.worldState.happiness += 40;
+                return;
             }
         }
     }

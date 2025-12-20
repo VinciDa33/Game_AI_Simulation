@@ -25,7 +25,7 @@ public class SimWorld
 
     public void InitWorld()
     {
-        worldState.happiness = 5 * SimParameters.Instance.populationSize;
+        worldState.happiness = 100 * SimParameters.Instance.populationSize;
         
         for (int i = 0; i < SimParameters.Instance.populationSize; i++)
             population.Add(new Person());

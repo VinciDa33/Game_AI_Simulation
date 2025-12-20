@@ -31,7 +31,7 @@ public class TLockdownPolicy : Policy
         if (!isEnabled)
             return;
 
-        world.worldState.happiness -= (int) Math.Floor(world.population.Count * 0.3f); //In a population of 1000, the starting happiness will be 5000, and this number will be 300
+        world.worldState.happiness -= (int) Math.Floor(world.population.Count * 0.4f); //In a population of 1000, the starting happiness will be 5000, and this number will be 400
 
         
         isEnabled = false;

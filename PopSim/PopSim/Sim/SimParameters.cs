@@ -112,14 +112,14 @@ public class SimParameters
     public int numberOfInitialInfections = 50;
     public float infectionChancePerHour = 0.07f; //7%
     public int meanTimeFromInfectionToSymptomatic = 120; //In hours
-    public int meanTimeFromSymptomaticToDeadly = 168; //In hours
-    public float chanceOfDeath = 0.0412f;
+    //public int meanTimeFromSymptomaticToDeadly = 168; //In hours
+    public float chanceOfDeath = 0.014f;
     
     public float chanceOfRecoveryFromInfectionPerHour = 0.04f; //4%
     public float chanceOfRecoveryFromSymptomaticPerHour = 0.025f; //2.5%
 
     public float chanceOfVaccinationPerHour = 0.005f; //0.5%. Only applies if the vaccine policy is enabled. 
-    public float resistanceGainFromRecovery = 0.5f;
+    public float resistanceGainFromRecovery = 0.7f;
     public float resistanceGainFromVaccine = 0.85f;
     public float resistanceDropOffPerHour = 0.99f; //Resistance is multiplied by this number every hour
 }

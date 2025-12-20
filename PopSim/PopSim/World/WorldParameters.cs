@@ -8,7 +8,7 @@ public class WorldParameters
     public float infectionChancePerHour;
 
     public int meanTimeFromInfectionToSymptomatic;
-    public int meanTimeFromSymptomaticToDeadly = 168; //In hours
+    //public int meanTimeFromSymptomaticToDeadly = 168; //In hours
     public float chanceOfDeath = 0.0412f;
     
     public float chanceOfRecoveryFromInfectionPerHour;
@@ -19,7 +19,7 @@ public class WorldParameters
         infectionChancePerHour = SimParameters.Instance.infectionChancePerHour;
 
         meanTimeFromInfectionToSymptomatic = SimParameters.Instance.meanTimeFromInfectionToSymptomatic;
-        meanTimeFromSymptomaticToDeadly = SimParameters.Instance.meanTimeFromSymptomaticToDeadly;
+        //meanTimeFromSymptomaticToDeadly = SimParameters.Instance.meanTimeFromSymptomaticToDeadly;
         chanceOfDeath = SimParameters.Instance.chanceOfDeath;
 
         chanceOfRecoveryFromInfectionPerHour = SimParameters.Instance.chanceOfRecoveryFromInfectionPerHour;
