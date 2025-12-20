@@ -34,6 +34,7 @@ class Program
             Console.WriteLine("!!!!!!!!!!!!!!!!\n" +
                               "!!!!!!!!!!!!!!!!\n" +
                               "A FATAL ERROR OCCURED, RETRYING\n" +
+                              e.StackTrace + "\n" +
                               "!!!!!!!!!!!!!!!!\n" +
                               "!!!!!!!!!!!!!!!!\n");
             manager.Start();
