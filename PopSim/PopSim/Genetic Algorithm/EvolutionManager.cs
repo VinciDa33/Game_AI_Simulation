@@ -2,6 +2,7 @@
 using PopSim.Genetic_Algorithm.Iteration_1;
 using PopSim.Genetic_Algorithm.Iteration_2;
 using PopSim.Genetic_Algorithm.Iteration_3;
+using PopSim.Genetic_Algorithm.Iteration_Baseline;
 using PopSim.Genetic_Algorithm.NSGA2;
 using PopSim.Utility;
 
@@ -150,7 +151,11 @@ public class EvolutionManager
         population.Clear();
         for (int i = 0; i < generationSize; i++)
         {
-            if (generation == 1)
+            if (generation == -1)
+                population.Add(new BaselineTyrantAgent(0, i));
+            else if (generation == 0)
+                population.Add(new BaselineAgent(0, i));
+            else if (generation == 1)
                 population.Add(new Iteration1Agent(0, i));
             else if (generation == 2)
                 population.Add(new Iteration2Agent(0, i));
